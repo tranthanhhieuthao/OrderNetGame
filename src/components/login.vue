@@ -8,7 +8,7 @@
     <el-input v-model="login.password" autocomplete="off"></el-input>
   </el-form-item>
   <el-form-item>
-    <el-button type="primary" @click="loginNow">Login!</el-button>
+    <el-button type="primary"  @keyup.13="loginNow" @click="loginNow">Login!</el-button>
     <el-button @click="resetForm">Reset</el-button>
   </el-form-item>
 </el-form>
@@ -35,10 +35,8 @@ export default {
         loginNow() {
             firebase.auth().signInWithEmailAndPassword(this.login.username,this.login.password).then( res => {
                 console.log('success')
-                console.log(res.user.refreshToken)
-                VueCookies.set('Token', res.user.refreshToken, '1h')
-                console.log(VueCookies.get('Token'))
-                this.$router.replace('/createUser')
+                VueCookies.set('Token', res.user.xa, '2h')
+                this.$router.replace('/showUser')
             }).catch(er => console.log(er))
         },
         resetForm() {

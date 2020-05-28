@@ -48,12 +48,20 @@
     prop="statusCurent"
      />
    </el-table>
+     <div class="block">
+    <el-pagination
+      :total="total"
+      :page.sync="rowDataQuery.page"
+      :limit.sync="rowDataQuery.size"
+      @pagination="getDataUser"
+      layout="prev, pager, next, jumper"
+    />
+  </div>
   </div>
 </template>
 
 <script>
 import firebase from 'firebase'
-import VueCookies from 'vue-cookies'
 export default {
   name: 'HelloWorld',
   props: {
@@ -66,6 +74,11 @@ export default {
     token: {
     idToken: '',
     email: ''
+  },
+  total: 0,
+  rowDataQuery: {
+    page: 1,
+    size: 10
   },
    options: [
      {
@@ -80,18 +93,20 @@ export default {
  }
   },
   mounted() {
-  if (VueCookies.get('Token') === null) this.$router.replace('/Login')
-   else this.getDataUser()
+   this.getDataUser()
   },
   methods: {
     getDataUser() {
-      this.dataUser = []
+      this.dataUser = []  
       var db = firebase.firestore()
       db.collection('User').get().then(res => {
         res.forEach(e => this.dataUser.push(e.data()))
         console.log(this.dataUser)
         this.dataUser.forEach( e => {res.forEach( re => { e.id = re.id})})
         this.convertStatus()
+        this.total = this.dataUser.length
+        console.log(this.rowDataQuery.page*this.rowDataQuery.size)
+        this.dataUser = this.dataUser.slice(((this.rowDataQuery.page-1)*this.rowDataQuery.size),this.rowDataQuery.page*this.rowDataQuery.size)
       })
     },
     convertStatus() {
