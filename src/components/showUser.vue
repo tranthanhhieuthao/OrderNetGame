@@ -53,7 +53,7 @@
       :total="total"
       :page.sync="rowDataQuery.page"
       :limit.sync="rowDataQuery.size"
-      @pagination="getDataUser"
+      @current-change="getDataUser"
       layout="prev, pager, next, jumper"
     />
   </div>
@@ -96,16 +96,15 @@ export default {
    this.getDataUser()
   },
   methods: {
-    getDataUser() {
+    getDataUser(val) {
       this.dataUser = []  
+      if(val !== null)   this.rowDataQuery.page = val /// looi ne can suwa
       var db = firebase.firestore()
       db.collection('User').get().then(res => {
         res.forEach(e => this.dataUser.push(e.data()))
-        console.log(this.dataUser)
         this.dataUser.forEach( e => {res.forEach( re => { e.id = re.id})})
         this.convertStatus()
         this.total = this.dataUser.length
-        console.log(this.rowDataQuery.page*this.rowDataQuery.size)
         this.dataUser = this.dataUser.slice(((this.rowDataQuery.page-1)*this.rowDataQuery.size),this.rowDataQuery.page*this.rowDataQuery.size)
       })
     },
@@ -114,6 +113,9 @@ export default {
    if (e.status) e.statusCurent ='Online'
    else e.statusCurent ='Offine'
  })
+    },
+    handleSizeChange(val) {
+      console.log(val)
     }
   }
 }
