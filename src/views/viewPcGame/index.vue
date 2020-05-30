@@ -5,7 +5,8 @@
         <el-card :body-style="{ padding: '0px' }" shadow="hover" class="showPC">
       <img :src="item.img" class="image">
       <div style="padding: 14px;">
-        <span>{{item.namePc}}</span>
+        <span>{{item.namePc}}: </span>
+        <span>{{item.statusConvert}}</span>
         <div class="bottom clearfix">
           <el-button type="text" class="button" @click="OderPc(item.namePc)">Đặt chỗ</el-button>
         </div>
@@ -22,7 +23,8 @@ export default {
   data() {
     return {
       listPc: [],
-      usernameOder: ''
+      usernameOder: '',
+      order: false
     }
   },
   mounted() {
@@ -34,25 +36,46 @@ export default {
       var db = firebase.firestore()
       db.collection('Computer').get().then(res => {
         res.forEach(e => this.listPc.push(e.data()))
+        this.ConvertStstusPc()
       })
     },
     OderPc(pcName) {
-      console.log(pcName)
       var db = firebase.firestore()
       var user = firebase.auth().currentUser
       console.log(user.email)
       db.collection('User').where('email', '==', user.email).get().then(res => {
         res.forEach(e => {
-          db.collection('User').doc(e.id).update('pcName', pcName).then(() => {
-            this.$notify({
-              title: 'Success',
-              message: 'Oder success',
-              type: 'success',
-              position: 'bottom-right'
-            })
+          db.collection('Computer').doc(pcName).get().then(res => {
+            if (!res.data().status) {
+              db.collection('User').doc(e.id).update('pcName', pcName).then(() => {
+                db.collection('Computer').doc(pcName).update('status', true).then(() => {
+                  this.$notify({
+                    title: 'Success',
+                    message: 'Oder success',
+                    type: 'success',
+                    position: 'bottom-right'
+                  })
+                  this.getListPc()
+                })
+              })
+            } else {
+              this.$notify({
+                title: 'chỗ đã được đặt',
+                message: 'Oder fail',
+                type: 'warning',
+                position: 'bottom-right'
+              })
+            }
           })
         })
       })
+    },
+    ConvertStstusPc() {
+      this.listPc.forEach(e => {
+        if (e.status) e.statusConvert = 'Đang hoạt động'
+        else e.statusConvert = 'Đang tắt'
+      })
+      console.log(this.listPc)
     }
   }
 }
