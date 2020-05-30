@@ -1,6 +1,6 @@
 <template>
   <div class="create">
-   <el-table 
+   <el-table
    :data="dataUser">
    <el-table-column
     label="STT"
@@ -49,13 +49,13 @@
      />
    </el-table>
      <div class="block">
-    <el-pagination
+    <!-- <el-pagination
       :total="total"
       :page.sync="rowDataQuery.page"
       :limit.sync="rowDataQuery.size"
       @current-change="getDataUser"
       layout="prev, pager, next, jumper"
-    />
+    /> -->
   </div>
   </div>
 </template>
@@ -68,51 +68,48 @@ export default {
     msg: String
   },
   data() {
- return {
-   addDialog: false,
-   dataUser: [],
-    token: {
-    idToken: '',
-    email: ''
-  },
-  total: 0,
-  rowDataQuery: {
-    page: 1,
-    size: 10
-  },
-   options: [
-     {
-       label: 'Online',
-       value: true
-     },
-     {
-       label: 'Offine',
-       value: false
-     }
-   ]
- }
+    return {
+      addDialog: false,
+      dataUser: [],
+      token: {
+        idToken: '',
+        email: ''
+      },
+      total: 0,
+      rowDataQuery: {
+        page: 1,
+        size: 10
+      },
+      options: [
+        {
+          label: 'Online',
+          value: true
+        },
+        {
+          label: 'Offine',
+          value: false
+        }
+      ]
+    }
   },
   mounted() {
-   this.getDataUser()
+    this.getDataUser()
   },
   methods: {
-    getDataUser(val) {
-      this.dataUser = []  
-      if(val !== null)   this.rowDataQuery.page = val /// looi ne can suwa
+    getDataUser() {
+      this.dataUser = []
       var db = firebase.firestore()
       db.collection('User').get().then(res => {
         res.forEach(e => this.dataUser.push(e.data()))
-        this.dataUser.forEach( e => {res.forEach( re => { e.id = re.id})})
+        this.dataUser.forEach(e => { res.forEach(re => { e.id = re.id }) })
         this.convertStatus()
-        this.total = this.dataUser.length
-        this.dataUser = this.dataUser.slice(((this.rowDataQuery.page-1)*this.rowDataQuery.size),this.rowDataQuery.page*this.rowDataQuery.size)
       })
     },
     convertStatus() {
- this.dataUser.forEach( e => {
-   if (e.status) e.statusCurent ='Online'
-   else e.statusCurent ='Offine'
- })
+      this.dataUser.forEach(e => {
+        if (e.status) e.statusCurent = 'Online'
+        else e.statusCurent = 'Offine'
+      })
     },
     handleSizeChange(val) {
       console.log(val)

@@ -1,14 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import register from '@/components/register'
-// import login from '@/components/login'
 import VueCookies from 'vue-cookies'
 import layout from '@/layout'
 
 Vue.use(VueRouter)
 
-  const routes = [
+const routes = [
   {
     path: '/',
     name: 'Home',
@@ -19,11 +17,17 @@ Vue.use(VueRouter)
   },
   {
     path: '/register',
-    name: 'Register',
-    component: register,
-    meta: {
-      requiresAuth: false
-    }
+    component: layout,
+    children: [
+      {
+        path: '/register',
+        name: 'register',
+        component: () => import('@/components/register'),
+        meta: {
+          requiresAuth: false
+        }
+      }
+    ]
   },
   {
     path: '/showUser',
@@ -71,10 +75,10 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if(to.matched.some( record => record.meta.requiresAuth)){
-  const Token = VueCookies.get('Token')
-  if (Token === null) next('login')
-  else next()
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    const Token = VueCookies.get('Token')
+    if (Token === null) next('login')
+    else next()
   } else next()
 })
 

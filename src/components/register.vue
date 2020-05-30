@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="registerUserStyle">
 <el-form status-icon  label-width="120px" class="demo-ruleForm">
     <el-form-item label="Email" >
     <el-input v-model="registerUser.email"></el-input>
@@ -27,40 +27,42 @@
 <script>
 import firebase from 'firebase'
 export default {
-    data() {
-        return {
-            registerUser: {
-               password: '',
-               username: '',
-               phoneNumber: '',
-               moneyCurrent: 0,
-               historyMoney: 0,
-               pcName: 0,
-               timeRemain: 0,
-               status: false
-            }
-        }
-    },
-    methods: {
-        register() {
-            firebase.auth().createUserWithEmailAndPassword(this.registerUser.email, this.registerUser.password).then( res => {
-                console.log('success')
-                console.log(res)
-                })
-            .catch( er => console.log(er))
-             var db = firebase.firestore()
-      if (this.registerUser !== []) {
-      db.collection('User').add(this.registerUser).then( ()=> {
-        console.log('success')
-      }).catch(er => console.log(er))
+  data() {
+    return {
+      registerUser: {
+        password: '',
+        username: '',
+        phoneNumber: '',
+        moneyCurrent: 0,
+        historyMoney: 0,
+        pcName: 0,
+        timeRemain: 0,
+        status: false
       }
-        },
-        resetForm() {
-          this.registerUser = {} 
-        },
     }
+  },
+  methods: {
+    register() {
+      firebase.auth().createUserWithEmailAndPassword(this.registerUser.email, this.registerUser.password).then(res => {
+        console.log('success')
+      })
+        .catch(er => console.log(er))
+      var db = firebase.firestore()
+      if (this.registerUser !== []) {
+        db.collection('User').doc(this.registerUser.username).set(this.registerUser).then(() => {
+          console.log('success')
+        }).catch(er => console.log(er))
+      }
+    },
+    resetForm() {
+      this.registerUser = {}
+    }
+  }
 }
 </script>
 <style scoped>
-
+.registerUserStyle {
+  width: 600px;
+  margin:auto;
+}
 </style>
