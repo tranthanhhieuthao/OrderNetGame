@@ -1,6 +1,6 @@
 <template>
   <div class="create">
-   <el-table 
+   <el-table
    :data="dataUser">
    <el-table-column
     label="STT"
@@ -68,49 +68,48 @@ export default {
     msg: String
   },
   data() {
- return {
-   addDialog: false,
-   dataUser: [],
-    token: {
-    idToken: '',
-    email: ''
-  },
-  total: 0,
-  rowDataQuery: {
-    page: 1,
-    size: 10
-  },
-   options: [
-     {
-       label: 'Online',
-       value: true
-     },
-     {
-       label: 'Offine',
-       value: false
-     }
-   ]
- }
+    return {
+      addDialog: false,
+      dataUser: [],
+      token: {
+        idToken: '',
+        email: ''
+      },
+      total: 0,
+      rowDataQuery: {
+        page: 1,
+        size: 10
+      },
+      options: [
+        {
+          label: 'Online',
+          value: true
+        },
+        {
+          label: 'Offine',
+          value: false
+        }
+      ]
+    }
   },
   mounted() {
-   this.getDataUser()
+    this.getDataUser()
   },
   methods: {
     getDataUser() {
       this.dataUser = []
       var db = firebase.firestore()
-      console.log(db)
       db.collection('User').get().then(res => {
         res.forEach(e => this.dataUser.push(e.data()))
-        this.dataUser.forEach( e => {res.forEach( re => { e.id = re.id})})
+        this.dataUser.forEach(e => { res.forEach(re => { e.id = re.id }) })
         this.convertStatus()
       })
     },
     convertStatus() {
- this.dataUser.forEach( e => {
-   if (e.status) e.statusCurent ='Online'
-   else e.statusCurent ='Offine'
- })
+      this.dataUser.forEach(e => {
+        if (e.status || e.pcName !== 0) e.statusCurent = 'Online'
+        else e.statusCurent = 'Offine'
+      })
     },
     handleSizeChange(val) {
       console.log(val)
