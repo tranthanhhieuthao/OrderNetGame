@@ -50,7 +50,7 @@ export default {
             .catch( er => console.log(er))
              var db = firebase.firestore()
       if (this.registerUser !== []) {
-      db.collection('User').add(this.registerUser).then( ()=> {
+      db.collection('User').doc(this.registerUser.username).set(this.registerUser).then( ()=> {
         console.log('success')
       }).catch(er => console.log(er))
       }

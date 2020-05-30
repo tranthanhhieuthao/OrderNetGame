@@ -49,13 +49,13 @@
      />
    </el-table>
      <div class="block">
-    <el-pagination
+    <!-- <el-pagination
       :total="total"
       :page.sync="rowDataQuery.page"
       :limit.sync="rowDataQuery.size"
       @current-change="getDataUser"
       layout="prev, pager, next, jumper"
-    />
+    /> -->
   </div>
   </div>
 </template>
@@ -96,16 +96,14 @@ export default {
    this.getDataUser()
   },
   methods: {
-    getDataUser(val) {
-      this.dataUser = []  
-      if(val !== null)   this.rowDataQuery.page = val /// looi ne can suwa
+    getDataUser() {
+      this.dataUser = []
       var db = firebase.firestore()
+      console.log(db)
       db.collection('User').get().then(res => {
         res.forEach(e => this.dataUser.push(e.data()))
         this.dataUser.forEach( e => {res.forEach( re => { e.id = re.id})})
         this.convertStatus()
-        this.total = this.dataUser.length
-        this.dataUser = this.dataUser.slice(((this.rowDataQuery.page-1)*this.rowDataQuery.size),this.rowDataQuery.page*this.rowDataQuery.size)
       })
     },
     convertStatus() {
