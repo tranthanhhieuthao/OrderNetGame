@@ -1,4 +1,6 @@
 <template>
+<el-tabs type="border-card">
+  <el-tab-pane>
     <div class="registerUserStyle">
 <el-form status-icon  label-width="120px" class="demo-ruleForm">
     <el-form-item label="Email" >
@@ -22,6 +24,8 @@
   </el-form-item>
 </el-form>
     </div>
+  </el-tab-pane>
+</el-tabs>
 </template>
 
 <script>
@@ -44,7 +48,12 @@ export default {
   methods: {
     register() {
       firebase.auth().createUserWithEmailAndPassword(this.registerUser.email, this.registerUser.password).then(res => {
-        console.log('success')
+        this.$notify({
+          title: 'Success',
+          message: 'Register success',
+          type: 'success',
+          position: 'bottom-right'
+        })
       })
         .catch(er => console.log(er))
       var db = firebase.firestore()

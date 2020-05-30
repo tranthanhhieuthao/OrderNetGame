@@ -3,8 +3,6 @@
         <el-menu
       default-active="2"
       class="el-menu-vertical-demo"
-      @open="handleOpen"
-      @close="handleClose"
       background-color="#545c64"
       text-color="#fff"
       active-text-color="#ffd04b">
@@ -27,15 +25,21 @@
       </el-submenu>
       <el-menu-item index="2">
         <i class="el-icon-menu"></i>
-        <span>Navigator Two</span>
+        <span><router-link to="/showUser"><el-button>
+          List User
+          </el-button></router-link></span>
       </el-menu-item>
-      <el-menu-item index="3" disabled>
+      <el-menu-item index="3">
         <i class="el-icon-document"></i>
-        <span>Navigator Three</span>
+        <span><router-link to="/listPc"><el-button>
+          List PC
+          </el-button></router-link></span>
       </el-menu-item>
       <el-menu-item index="4">
         <i class="el-icon-setting"></i>
-        <span>Navigator Four</span>
+        <span><router-link to="/createPc"><el-button>
+          Create PC
+          </el-button></router-link></span>
       </el-menu-item>
     </el-menu>
     </div>
@@ -44,12 +48,6 @@
 <script>
 export default {
   methods: {
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath)
-    },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath)
-    }
   }
 }
 </script>

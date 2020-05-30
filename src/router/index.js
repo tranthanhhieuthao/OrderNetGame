@@ -44,6 +44,34 @@ const routes = [
     ]
   },
   {
+    path: '/listPc',
+    component: layout,
+    children: [
+      {
+        path: '/listPc',
+        name: 'listPc',
+        component: () => import('@/views/viewPcGame/index'),
+        meta: {
+          requiresAuth: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/createPc',
+    component: layout,
+    children: [
+      {
+        path: '/createPc',
+        name: 'createPc',
+        component: () => import('@/views/viewPcGame/createPc'),
+        meta: {
+          requiresAuth: true
+        }
+      }
+    ]
+  },
+  {
     path: '/login',
     name: 'login',
     component: layout,
@@ -77,8 +105,9 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     const Token = VueCookies.get('Token')
-    if (Token === null) next('login')
-    else next()
+    if (Token === null) {
+      next('login')
+    } else next()
   } else next()
 })
 

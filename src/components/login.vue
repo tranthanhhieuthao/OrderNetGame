@@ -1,4 +1,6 @@
 <template>
+<el-tabs type="border-card">
+  <el-tab-pane>
     <div class="login">
 <el-form status-icon  label-width="120px" class="demo-ruleForm">
     <el-form-item label="Username" prop="age">
@@ -13,6 +15,8 @@
   </el-form-item>
 </el-form>
     </div>
+  </el-tab-pane>
+</el-tabs>
 </template>
 
 <script>
