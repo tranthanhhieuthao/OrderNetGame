@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueCookies from 'vue-cookies'
 import layout from '@/layout'
+import firebase from 'firebase'
 
 Vue.use(VueRouter)
 
@@ -29,7 +30,8 @@ const routes = [
         name: 'showUser',
         component: () => import('@/components/showUser'),
         meta: {
-          requiresAuth: true
+          requiresAuth: true,
+          roles: ['ROLE_ADMIN']
         }
       }
     ]
@@ -43,7 +45,8 @@ const routes = [
         name: 'detailUser',
         component: () => import('@/views/detailUser'),
         meta: {
-          requiresAuth: true
+          requiresAuth: true,
+          roles: ['ROLE_USER']
         }
       }
     ]
@@ -57,7 +60,8 @@ const routes = [
         name: 'listPc',
         component: () => import('@/views/viewPcGame/index'),
         meta: {
-          requiresAuth: true
+          requiresAuth: true,
+          roles: ['ROLE_USER']
         }
       }
     ]
@@ -71,7 +75,8 @@ const routes = [
         name: 'createPc',
         component: () => import('@/views/viewPcGame/createPc'),
         meta: {
-          requiresAuth: true
+          requiresAuth: true,
+          roles: ['ROLE_ADMIN']
         }
       }
     ]
@@ -85,7 +90,8 @@ const routes = [
         path: '/login',
         component: () => import('@/components/login'),
         meta: {
-          requiresAuth: false
+          requiresAuth: false,
+          role: []
         }
       }
     ]
@@ -108,6 +114,20 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  var db = firebase.firestore()
+  if (VueCookies.get('username') !== null) {
+    db.collection('User').doc(VueCookies.get('username')).get().then(res => {
+      to.matched.forEach(record => {
+        console.log(res.data().role)
+        console.log(record.meta.roles)
+        if (record.meta.roles === undefined) next('listPc')
+        record.meta.roles.forEach(e => {
+          if (e === res.data().role) next()
+          else next('listPc')
+        })
+      })
+    })
+  }
   if (to.matched.some(record => record.meta.requiresAuth)) {
     const Token = VueCookies.get('Token')
     if (Token === null) {

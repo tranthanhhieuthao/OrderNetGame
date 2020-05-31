@@ -2,19 +2,19 @@
     <div class="detailUserStyle">
       <el-form label-position="left" label-width="100px">
   <el-form-item label="Name">
-    <el-input v-model="dataUser.username"></el-input>
+    <el-input disabled v-model="dataUser.username"></el-input>
   </el-form-item>
   <el-form-item label="Email">
-    <el-input v-model="dataUser.email"></el-input>
+    <el-input disabled v-model="dataUser.email"></el-input>
   </el-form-item>
    <el-form-item label="Status">
-    <el-input v-model="dataUser.statusCurent"></el-input>
+    <el-input disabled v-model="dataUser.statusCurent"></el-input>
   </el-form-item>
   <el-form-item label="phoneNumber">
-    <el-input v-model="dataUser.phoneNumber"></el-input>
+    <el-input disabled v-model="dataUser.phoneNumber"></el-input>
   </el-form-item>
   <el-form-item label="Pc">
-    <el-input v-model="dataUser.pcName"></el-input>
+    <el-input disabled v-model="dataUser.pcName"></el-input>
   </el-form-item>
 </el-form>
     </div>

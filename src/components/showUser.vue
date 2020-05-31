@@ -70,6 +70,7 @@ export default {
   data() {
     return {
       addDialog: false,
+      show: false,
       dataUser: [],
       token: {
         idToken: '',
@@ -94,6 +95,7 @@ export default {
   },
   mounted() {
     this.getDataUser()
+    console.log(this.$route.meta.roles)
   },
   methods: {
     getDataUser() {

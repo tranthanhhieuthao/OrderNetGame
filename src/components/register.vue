@@ -41,7 +41,8 @@ export default {
         historyMoney: 0,
         pcName: 0,
         timeRemain: 0,
-        status: false
+        status: false,
+        role: 'ROLE_USER'
       }
     }
   },
