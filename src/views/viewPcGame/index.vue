@@ -19,6 +19,7 @@
 
 <script>
 import firebase from 'firebase'
+import VueCookies from 'vue-cookies'
 export default {
   data() {
     return {
@@ -41,33 +42,28 @@ export default {
     },
     OderPc(pcName) {
       var db = firebase.firestore()
-      var user = firebase.auth().currentUser
-      console.log(user.email)
-      db.collection('User').where('email', '==', user.email).get().then(res => {
-        res.forEach(e => {
-          db.collection('Computer').doc(pcName).get().then(res => {
-            if (!res.data().status) {
-              db.collection('User').doc(e.id).update('pcName', pcName).then(() => {
-                db.collection('Computer').doc(pcName).update('status', true).then(() => {
-                  this.$notify({
-                    title: 'Success',
-                    message: 'Oder success',
-                    type: 'success',
-                    position: 'bottom-right'
-                  })
-                  this.getListPc()
-                })
-              })
-            } else {
+      var docpcName = db.collection('Computer').doc(pcName)
+      docpcName.get().then(res => {
+        if (!res.data().status) {
+          db.collection('User').doc(VueCookies.get('username')).update('pcName', pcName).then(() => {
+            docpcName.update('status', true).then(() => {
               this.$notify({
-                title: 'chỗ đã được đặt',
-                message: 'Oder fail',
-                type: 'warning',
+                title: 'Success',
+                message: 'Oder success',
+                type: 'success',
                 position: 'bottom-right'
               })
-            }
+              this.getListPc()
+            })
           })
-        })
+        } else {
+          this.$notify({
+            title: 'chỗ đã được đặt',
+            message: 'Oder fail',
+            type: 'warning',
+            position: 'bottom-right'
+          })
+        }
       })
     },
     ConvertStstusPc() {

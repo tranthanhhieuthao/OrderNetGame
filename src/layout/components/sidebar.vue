@@ -41,13 +41,26 @@
           Create PC
           </el-button></router-link></span>
       </el-menu-item>
+       <el-menu-item index="5">
+        <i class="el-icon-setting"></i>
+        <span><router-link :to="{path: `/detail/${id}`}" ><el-button>
+          Detail
+          </el-button></router-link></span>
+      </el-menu-item>
     </el-menu>
     </div>
 </template>
 
 <script>
+import VueCookies from 'vue-cookies'
 export default {
-  methods: {
+  data() {
+    return {
+      id: ''
+    }
+  },
+  created() {
+    this.id = VueCookies.get('username')
   }
 }
 </script>

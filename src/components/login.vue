@@ -40,14 +40,28 @@ export default {
       firebase.auth().signInWithEmailAndPassword(this.login.username, this.login.password).then(res => {
         console.log('success')
         VueCookies.set('Token', res.user.xa, '2h')
+        VueCookies.set('email', this.login.username, '2h')
+        console.log(VueCookies.get('email'))
         this.$notify({
           title: 'Success',
           message: 'Login success',
           type: 'success',
           position: 'bottom-right'
         })
-        this.$router.replace('/showUser')
-      }).catch(er => console.log(er))
+        firebase.firestore().collection('User').where('email', '==', VueCookies.get('email')).get().then(res => {
+          res.forEach(e => {
+            VueCookies.set('username', e.id, '2h')
+            this.$router.replace('/detail/' + VueCookies.get('username'))
+          })
+        })
+      }).catch(er => {
+        this.$notify({
+          title: 'Error',
+          message: 'Login Error',
+          type: 'error',
+          position: 'bottom-right'
+        })
+      })
     },
     resetForm() {
       this.login = {}

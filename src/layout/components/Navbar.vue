@@ -26,7 +26,9 @@ import VueCookies from 'vue-cookies'
 export default {
   methods: {
     logout() {
+      VueCookies.set('email', VueCookies.get('email'), '0s')
       VueCookies.set('Token', VueCookies.get('Token'), '0s')
+      VueCookies.set('username', VueCookies.get('username'), '0s')
       this.$router.replace('/login')
     }
   }

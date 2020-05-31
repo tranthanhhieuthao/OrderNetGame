@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="mainStyle">
         <el-row :gutter="24">
         <el-col :span="3">
             <sidebar />
@@ -8,7 +8,7 @@
         <el-header>
            <Navbar />
         </el-header>
-        <el-main>
+        <el-main >
         <app />
         </el-main>
         </el-col>
@@ -30,5 +30,8 @@ export default {
 </script>
 
 <style scoped>
-
+.mainStyle {
+ background-image: url('https://thietbiketnoi.com/wp-content/uploads/2020/01/tong-hop-hinh-nen-background-vector-designer-dep-do-phan-giai-fhd-2k-4k-moi-nhat-3-scaled.jpg');
+ background-repeat: no-repeat;
+}
 </style>

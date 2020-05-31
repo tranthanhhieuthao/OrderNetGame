@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 import VueCookies from 'vue-cookies'
 import layout from '@/layout'
 
@@ -9,14 +8,6 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home,
-    meta: {
-      requiresAuth: false
-    }
-  },
-  {
-    path: '/register',
     component: layout,
     children: [
       {
@@ -37,6 +28,20 @@ const routes = [
         path: '/showUser',
         name: 'showUser',
         component: () => import('@/components/showUser'),
+        meta: {
+          requiresAuth: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/detail',
+    component: layout,
+    children: [
+      {
+        path: '/detail/:id',
+        name: 'detailUser',
+        component: () => import('@/views/detailUser'),
         meta: {
           requiresAuth: true
         }
