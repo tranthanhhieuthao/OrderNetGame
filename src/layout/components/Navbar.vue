@@ -9,7 +9,7 @@
   <el-menu-item />
     <el-menu-item style="float:right;">
       <el-dropdown split-button type="primary" >
-        {{this.$store.state.app.usernameReload}}
+        {{usernameReload}}
   <el-dropdown-menu slot="dropdown">
     <el-dropdown-item>
      <router-link to="/login">
@@ -33,12 +33,16 @@
 
 <script>
 import VueCookies from 'vue-cookies'
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
       usernameCurrent: '',
       iconreload: 0
     }
+  },
+  computed: {
+    ...mapGetters(['usernameReload'])
   },
   mounted() {
     this.usernameCurrent = VueCookies.get('username')
@@ -51,7 +55,7 @@ export default {
       this.usernameCurrent = VueCookies.get('username')
       this.$router.replace('/login')
       this.$store.dispatch('app/usernameReload', this.usernameCurrent)
-      console.log(this.$store.state.app.usernameReload)
+      console.log(this.usernameReload)
     }
   }
 }

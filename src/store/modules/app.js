@@ -1,5 +1,5 @@
 const state = {
-  usernameReload: ''
+  usernameReload: 'Noname'
 }
 
 const mutations = {
