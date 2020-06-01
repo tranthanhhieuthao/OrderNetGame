@@ -2,7 +2,7 @@
 <el-tabs type="border-card">
   <el-tab-pane>
     <div class="login">
-<el-form status-icon  label-width="120px" class="demo-ruleForm">
+<el-form status-icon  label-width="30%" class="demo-ruleForm">
     <el-form-item label="Username" prop="age">
     <el-input v-model="login.username"></el-input>
   </el-form-item>

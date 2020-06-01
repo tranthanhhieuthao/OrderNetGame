@@ -1,5 +1,6 @@
+import VueCookies from 'vue-cookies'
 const state = {
-  usernameReload: 'Noname'
+  usernameReload: VueCookies.get('username') !== 'Noname' ? VueCookies.get('username') : 'Noname'
 }
 
 const mutations = {
