@@ -42,6 +42,7 @@ export default {
         console.log('success')
         VueCookies.set('Token', res.user.xa, '2h')
         VueCookies.set('email', this.login.username, '2h')
+        console.log(firebase.auth().currentUser.email)
         this.$notify({
           title: 'Success',
           message: 'Login success',

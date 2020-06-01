@@ -46,11 +46,6 @@ export default {
   },
   created() {
     this.id = VueCookies.get('username')
-    console.log('-----')
-    console.log(this.id)
-    console.log('-----')
-    // this.showBtnAd = this.$store.state.app.showButtonAdmin
-    // console.log(this.showBtnAd)
   }
 }
 </script>
