@@ -24,28 +24,24 @@
         </el-submenu>
       </el-submenu>
       <el-menu-item index="2">
-        <i class="el-icon-menu"></i>
-        <span><router-link to="/showUser"><el-button>
-          List User
-          </el-button></router-link></span>
+        <span><router-link to="/showUser">
+         <i class="el-icon-menu"> List User</i>
+          </router-link></span>
       </el-menu-item>
       <el-menu-item index="3">
-        <i class="el-icon-document"></i>
-        <span><router-link to="/listPc"><el-button>
-          List PC
-          </el-button></router-link></span>
+        <span><router-link to="/listPc">
+         <i class="el-icon-document"> List PC</i>
+          </router-link></span>
       </el-menu-item>
       <el-menu-item index="4">
-        <i class="el-icon-setting"></i>
-        <span><router-link to="/createPc"><el-button>
-          Create PC
-          </el-button></router-link></span>
+        <span><router-link to="/createPc">
+         <i class="el-icon-setting"> Create PC</i>
+          </router-link></span>
       </el-menu-item>
        <el-menu-item index="5">
-        <i class="el-icon-setting"></i>
-        <span><router-link :to="{path: `/detail/${id}`}" ><el-button>
-          Detail
-          </el-button></router-link></span>
+        <span><router-link :to="{path: `/detail/${id}`}" >
+         <i class="el-icon-setting"> Detail</i>
+          </router-link></span>
       </el-menu-item>
     </el-menu>
     </div>
