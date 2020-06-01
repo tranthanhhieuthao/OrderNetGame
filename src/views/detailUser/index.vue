@@ -79,19 +79,24 @@ export default {
       var db = firebase.firestore()
       var auth = firebase.auth().currentUser
       this.credential()
-      db.collection('User').doc(this.$route.params.id).update(this.dataUser).then(() => {
-        this.$notify({
-          title: 'Success',
-          message: 'Update success',
-          type: 'success',
-          position: 'bottom-right'
+      auth.updateEmail(this.dataUser.email + '').then(res => {
+        auth.updatePassword(this.dataUser.password + '').then(res => {
+          db.collection('User').doc(this.$route.params.id).update(this.dataUser).then(() => {
+            this.$notify({
+              title: 'Success',
+              message: 'Update success',
+              type: 'success',
+              position: 'bottom-right'
+            })
+          })
         })
       })
+
       console.log(this.dataUser.password)
       auth.updatePassword(this.dataUser.password + '').then(res => console.log('success')).catch(er => {
         console.log(er)
       })
-      auth.updateEmail(this.dataUser.email + '').then(res => console.log(res))
+      // auth.updateEmail(this.dataUser.email + '').then(res => console.log(res))
     },
     Delete() {
       var db = firebase.firestore()
