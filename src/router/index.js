@@ -16,7 +16,8 @@ const routes = [
         name: 'register',
         component: () => import('@/components/register'),
         meta: {
-          requiresAuth: false
+          requiresAuth: false,
+          roles: []
         }
       }
     ]
@@ -46,7 +47,7 @@ const routes = [
         component: () => import('@/views/detailUser'),
         meta: {
           requiresAuth: true,
-          roles: ['ROLE_USER']
+          roles: ['ROLE_USER', 'ROLE_ADMIN']
         }
       }
     ]
@@ -61,7 +62,7 @@ const routes = [
         component: () => import('@/views/viewPcGame/index'),
         meta: {
           requiresAuth: true,
-          roles: ['ROLE_USER']
+          roles: ['ROLE_USER', 'ROLE_ADMIN']
         }
       }
     ]
@@ -115,17 +116,17 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   var db = firebase.firestore()
+  var count = 0
   if (VueCookies.get('username') !== null) {
     db.collection('User').doc(VueCookies.get('username')).get().then(res => {
-      to.matched.forEach(record => {
-        console.log(res.data().role)
-        console.log(record.meta.roles)
-        if (record.meta.roles === undefined) next('listPc')
-        record.meta.roles.forEach(e => {
-          if (e === res.data().role) next()
-          else next('listPc')
+      console.log(to.meta.roles)
+      if (to.meta.roles !== undefined) {
+        to.meta.roles.forEach(e => {
+          if (e === res.data().role) count++
         })
-      })
+        if (count > 0) next()
+        else next('login')
+      } else next('login')
     })
   }
   if (to.matched.some(record => record.meta.requiresAuth)) {
