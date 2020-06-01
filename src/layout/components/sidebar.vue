@@ -56,11 +56,14 @@ import VueCookies from 'vue-cookies'
 export default {
   data() {
     return {
-      id: ''
+      id: '',
+      showBtnAd: true
     }
   },
   created() {
     this.id = VueCookies.get('username')
+    // this.showBtnAd = this.$store.state.app.showButtonAdmin
+    // console.log(this.showBtnAd)
   }
 }
 </script>

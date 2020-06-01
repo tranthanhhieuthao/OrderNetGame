@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import VueCookies from 'vue-cookies'
 import layout from '@/layout'
 import firebase from 'firebase'
+// import store from '@/store'
 
 Vue.use(VueRouter)
 
@@ -117,7 +118,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   var db = firebase.firestore()
   var count = 0
-  if (VueCookies.get('username') !== null) {
+  if (VueCookies.get('username') !== 'Noname') {
     db.collection('User').doc(VueCookies.get('username')).get().then(res => {
       console.log(to.meta.roles)
       if (to.meta.roles !== undefined) {
@@ -125,12 +126,19 @@ router.beforeEach((to, from, next) => {
           if (e === res.data().role) count++
         })
         if (count > 0) next()
-        else next('login')
-      } else next('login')
+        else {
+          router.replace('/detail/' + VueCookies.get('username'))
+        }
+      } else {
+        router.replace('/detail/' + VueCookies.get('username'))
+      }
     })
   }
   if (to.matched.some(record => record.meta.requiresAuth)) {
     const Token = VueCookies.get('Token')
+    // to.meta.roles.forEach(e => {
+    //   if (e === 'ROLE_ADMIN') store.dispatch('app/showBtnAdmin', true)
+    // })
     if (Token === null) {
       next('login')
     } else next()

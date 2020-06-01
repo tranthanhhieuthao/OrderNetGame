@@ -29,6 +29,7 @@ export default {
         password: '',
         username: ''
       },
+      iconreload: 0,
       token: {
         Token: '',
         email: ''
@@ -41,7 +42,6 @@ export default {
         console.log('success')
         VueCookies.set('Token', res.user.xa, '2h')
         VueCookies.set('email', this.login.username, '2h')
-        console.log(VueCookies.get('email'))
         this.$notify({
           title: 'Success',
           message: 'Login success',
@@ -51,7 +51,9 @@ export default {
         firebase.firestore().collection('User').where('email', '==', VueCookies.get('email')).get().then(res => {
           res.forEach(e => {
             VueCookies.set('username', e.id, '2h')
+            this.$store.dispatch('app/usernameReload', VueCookies.get('username'))
             this.$router.replace('/detail/' + VueCookies.get('username'))
+            console.log(this.$store.state.app.usernameReload)
           })
         })
       }).catch(er => {
