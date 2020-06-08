@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import VueCookies from 'vue-cookies'
 import layout from '@/layout'
 import firebase from 'firebase'
-// import store from '@/store'
+import store from '@/store'
 
 Vue.use(VueRouter)
 
@@ -118,7 +118,8 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   var db = firebase.firestore()
   var count = 0
-  if (VueCookies.get('username') !== 'Noname') {
+  console.log(store.state.app.usernameReload)
+  if (store.state.app.usernameReload !== 'Noname') {
     db.collection('User').doc(VueCookies.get('username')).get().then(res => {
       console.log(to.meta.roles)
       if (to.meta.roles !== undefined) {
