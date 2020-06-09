@@ -95,7 +95,6 @@ export default {
   },
   mounted() {
     this.getDataUser()
-    console.log(this.$route.meta.roles)
   },
   methods: {
     getDataUser() {

@@ -87,7 +87,6 @@ export default {
       this.showBtnSave = false
       var db = firebase.firestore()
       var auth = firebase.auth().currentUser
-      console.log(auth)
       auth.updateEmail(this.dataUser.email + '').then(res => {
         auth.updatePassword(this.dataUser.password + '').then(res => {
           db.collection('User').doc(this.$route.params.id).update(this.dataUser).then(() => {
@@ -127,17 +126,14 @@ export default {
       var auth = firebase.auth().currentUser
       firebase.auth().onAuthStateChanged(user => {
         let credential
-        console.log(user)
         if (user === '') {
           credential = firebase.auth.EmailAuthProvider.credential(
             auth.email,
             this.dataUser.password
           )
         } else {
-          console.log(this.dataUser)
           firebase.auth().signInWithEmailAndPassword(this.dataUser.email.trim(), this.dataUser.password).then(res => {
             console.log('success')
-            console.log(auth)
             credential = firebase.auth.EmailAuthProvider.credential(
               auth.email,
               this.dataUser.password

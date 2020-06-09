@@ -40,7 +40,7 @@ import VueCookies from 'vue-cookies'
 export default {
   data() {
     return {
-      id: '',
+      id: VueCookies.get('username'),
       showBtnAd: true
     }
   },

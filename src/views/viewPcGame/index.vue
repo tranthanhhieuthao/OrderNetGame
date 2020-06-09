@@ -71,7 +71,6 @@ export default {
         if (e.status) e.statusConvert = 'Đang hoạt động'
         else e.statusConvert = 'Đang tắt'
       })
-      console.log(this.listPc)
     }
   }
 }
