@@ -41,37 +41,36 @@ export default {
     ...mapGetters(['dataUserCurrent'])
   },
   methods: {
-    loginNow() {
-      firebase.auth().signInWithEmailAndPassword(this.login.username, this.login.password).then(res => {
-        console.log('success')
-        VueCookies.set('Token', res.user.xa, '2h')
+    resetForm() {
+      this.login = {}
+    },
+    async loginNow() {
+      try {
+        const resLogin = await this.$store.dispatch('app/loginApplication', this.login)
+        console.log(resLogin)
+        VueCookies.set('Token', resLogin.user.xa, '2h')
         VueCookies.set('email', this.login.username, '2h')
+        const setDataUserCurrent = await firebase.firestore().collection('User').where('email', '==', VueCookies.get('email')).get()
+        setDataUserCurrent.forEach(e => {
+          this.$store.dispatch('app/dataUserCurrent', e.data())
+          VueCookies.set('username', e.id, '2h')
+          this.$store.dispatch('app/usernameReload', VueCookies.get('username'))
+          this.$router.replace('/detail/' + VueCookies.get('username'))
+        })
         this.$notify({
           title: 'Success',
           message: 'Login success',
           type: 'success',
           position: 'bottom-right'
         })
-        firebase.firestore().collection('User').where('email', '==', VueCookies.get('email')).get().then(res => {
-          res.forEach(e => {
-            this.$store.dispatch('app/dataUserCurrent', e.data())
-            console.log(this.dataUserCurrent)
-            VueCookies.set('username', e.id, '2h')
-            this.$store.dispatch('app/usernameReload', VueCookies.get('username'))
-            this.$router.replace('/detail/' + VueCookies.get('username'))
-          })
-        })
-      }).catch(er => {
+      } catch (er) {
         this.$notify({
           title: 'Error',
           message: 'Login Error',
           type: 'error',
           position: 'bottom-right'
         })
-      })
-    },
-    resetForm() {
-      this.login = {}
+      }
     }
   }
 }

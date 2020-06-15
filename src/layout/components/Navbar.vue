@@ -46,27 +46,19 @@ export default {
   computed: {
     ...mapGetters(['usernameReload', 'dataUserCurrent'])
   },
-  created() {
-    this.usernameCurrent = VueCookies.get('username')
-  },
-  watch: {
-    dataUserCurrent() {
-      this.dataLogout = this.$store.state.app.dataUserCurrent
-    }
-  },
   methods: {
     logout() {
+      this.dataLogout = this.dataUserCurrent
       var db = firebase.firestore()
-      console.log(this.dataLogout)
-      if (this.dataLogout.pcName !== '') {
+      if (this.dataLogout.pcName !== 0) {
         var nycRef = db.collection('Computer').doc(this.dataLogout.pcName)
         db.batch().update(nycRef, {status: false})
+        db.batch().commit().then((res) => console.log(res))
       }
       this.dataLogout.status = false
       this.dataLogout.pcName = 0
       if (this.dataLogout.status || this.dataLogout.pcName !== 0) this.dataLogout.statusCurent = 'Online'
       else this.dataLogout.statusCurent = 'Offine'
-      console.log(this.dataLogout)
       db.collection('User').doc(VueCookies.get('username')).update(this.dataLogout).then(() => {
         VueCookies.set('email', VueCookies.get('email'), '0s')
         VueCookies.set('Token', VueCookies.get('Token'), '0s')

@@ -40,22 +40,21 @@ export default {
         this.ConvertStstusPc()
       })
     },
-    OderPc(pcName) {
-      var db = firebase.firestore()
-      var docpcName = db.collection('Computer').doc(pcName)
-      docpcName.get().then(res => {
+    async OderPc(pcName) {
+      try {
+        const db = firebase.firestore()
+        const docpcName = db.collection('Computer').doc(pcName)
+        const res = await docpcName.get()
         if (!res.data().status) {
-          db.collection('User').doc(VueCookies.get('username')).update('pcName', pcName).then(() => {
-            docpcName.update('status', true).then(() => {
-              this.$notify({
-                title: 'Success',
-                message: 'Oder success',
-                type: 'success',
-                position: 'bottom-right'
-              })
-              this.getListPc()
-            })
+          await db.collection('User').doc(VueCookies.get('username')).update('pcName', pcName)
+          await docpcName.update('status', true)
+          this.$notify({
+            title: 'Success',
+            message: 'Oder success',
+            type: 'success',
+            position: 'bottom-right'
           })
+          this.getListPc()
         } else {
           this.$notify({
             title: 'chỗ đã được đặt',
@@ -64,7 +63,9 @@ export default {
             position: 'bottom-right'
           })
         }
-      })
+      } catch (er) {
+        console.log(er)
+      }
     },
     ConvertStstusPc() {
       this.listPc.forEach(e => {

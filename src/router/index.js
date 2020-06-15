@@ -119,6 +119,7 @@ router.beforeEach((to, from, next) => {
   var db = firebase.firestore()
   var count = 0
   if (store.state.app.usernameReload !== 'Noname') {
+    VueCookies.set('username', store.state.app.usernameReload, '2h')
     db.collection('User').doc(VueCookies.get('username')).get().then(res => {
       if (to.meta.roles !== undefined) {
         to.meta.roles.forEach(e => {
@@ -135,9 +136,6 @@ router.beforeEach((to, from, next) => {
   }
   if (to.matched.some(record => record.meta.requiresAuth)) {
     const Token = VueCookies.get('Token')
-    // to.meta.roles.forEach(e => {
-    //   if (e === 'ROLE_ADMIN') store.dispatch('app/showBtnAdmin', true)
-    // })
     if (Token === null) {
       next('login')
     } else next()

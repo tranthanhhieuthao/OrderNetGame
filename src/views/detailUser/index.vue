@@ -82,29 +82,29 @@ export default {
       this.disableEdit = false
       this.showBtnSave = true
     },
-    saveChange() {
-      this.disableEdit = true
-      this.showBtnSave = false
-      var db = firebase.firestore()
-      var auth = firebase.auth().currentUser
-      auth.updateEmail(this.dataUser.email + '').then(res => {
-        auth.updatePassword(this.dataUser.password + '').then(res => {
-          db.collection('User').doc(this.$route.params.id).update(this.dataUser).then(() => {
-            this.$notify({
-              title: 'Success',
-              message: 'Update success',
-              type: 'success',
-              position: 'bottom-right'
-            })
-          })
+    async saveChange() {
+      try {
+        this.disableEdit = true
+        this.showBtnSave = false
+        var db = firebase.firestore()
+        var auth = firebase.auth().currentUser
+        await auth.updateEmail(this.dataUser.email + '')
+        await auth.updatePassword(this.dataUser.password + '')
+        await db.collection('User').doc(this.$route.params.id).update(this.dataUser)
+        this.$notify({
+          title: 'Success',
+          message: 'Update success',
+          type: 'success',
+          position: 'bottom-right'
         })
-      })
-
       // console.log(this.dataUser.password)
       // auth.updatePassword(this.dataUser.password + '').then(res => console.log('success')).catch(er => {
       //   console.log(er)
       // })
       // auth.updateEmail(this.dataUser.email + '').then(res => console.log(res))
+      } catch (er) {
+        console.log(er)
+      }
     },
     Delete() {
       var db = firebase.firestore()
@@ -122,26 +122,22 @@ export default {
         })
       })
     },
-    credential() {
-      var auth = firebase.auth().currentUser
-      firebase.auth().onAuthStateChanged(user => {
+    async credential() {
+      try {
+        var auth = firebase.auth().currentUser
+        const user = await firebase.auth().onAuthStateChanged
         let credential
-        if (user === '') {
+        if (user !== '') {
+          await firebase.auth().signInWithEmailAndPassword(this.dataUser.email.trim(), this.dataUser.password)
           credential = firebase.auth.EmailAuthProvider.credential(
             auth.email,
             this.dataUser.password
           )
-        } else {
-          firebase.auth().signInWithEmailAndPassword(this.dataUser.email.trim(), this.dataUser.password).then(res => {
-            console.log('success')
-            credential = firebase.auth.EmailAuthProvider.credential(
-              auth.email,
-              this.dataUser.password
-            )
-          })
         }
-        auth.reauthenticateWithCredential(credential).then(res => { })
-      })
+        await auth.reauthenticateWithCredential(credential)
+      } catch (er) {
+        console.log(er)
+      }
     },
     Payload() {
       this.dataUser.moneyCurrent += parseInt(this.moneyCurrentTemp)

@@ -20,11 +20,20 @@
 import Navbar from '@/layout/components/Navbar'
 import sidebar from '@/layout/components/sidebar'
 import app from '@/App'
+import ResizeMixin from '@/layout/mixin/ResizeHandler'
+import { mapState } from 'vuex'
+
 export default {
   components: {
     Navbar,
     app,
     sidebar
+  },
+  mixins: [ResizeMixin],
+  computed: {
+    ...mapState({
+      device: state => state.app.device
+    })
   }
 }
 </script>
