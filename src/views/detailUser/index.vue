@@ -61,8 +61,6 @@ export default {
         timeRemain: 0
       },
       count: 0,
-      minute: 59,
-      second: 59,
       timeRemainData: '',
       moneyCurrentTemp: 0,
       dialogDelete: false,
@@ -75,10 +73,8 @@ export default {
   },
   watch: {
     second() {
-      this.convertTimeRemain()
-    },
-    namePcStartTime() {
-      if (this.namePcStartTime !== 0) {
+      console.log(this.second)
+      if (this.namePcStartTime !== '') {
         this.convertTimeRemain()
       }
     }
@@ -87,6 +83,11 @@ export default {
     namePcStartTime: {
       get() {
         return this.dataUser.pcName
+      }
+    },
+    second: {
+      get() {
+        return this.dataUser.second
       }
     }
   },
@@ -98,7 +99,7 @@ export default {
         this.convertStatus()
         this.credential()
         this.dataUser.timeRemain = this.dataUser.moneyCurrent / 5000 - 1
-        this.timeRemainData = this.dataUser.timeRemain + 'h' + ' : ' + this.minute + 'min' + ' : ' + this.second + 's'
+        this.timeRemainData = this.dataUser.timeRemain + 'h' + ' : ' + this.dataUser.minute + 'min' + ' : ' + this.dataUser.second + 's'
       })
     },
     convertStatus() {
@@ -106,17 +107,18 @@ export default {
       else this.dataUser.statusCurent = 'Offine'
     },
     convertTimeRemain() {
-      this.timeRemainData = this.dataUser.timeRemain + 'h' + ' : ' + this.minute + 'min' + ' : ' + this.second + 's'
+      console.log('chay1')
+      this.timeRemainData = this.dataUser.timeRemain + 'h' + ' : ' + this.dataUser.minute + 'min' + ' : ' + this.dataUser.second + 's'
       setTimeout(() => {
-        if (this.second === 0) {
-          this.minute--
-          this.second = 59
+        if (this.dataUser.second === 0) {
+          this.dataUser.minute--
+          this.dataUser.second = 59
         } else {
-          this.second--
+          this.dataUser.second--
         }
-        if (this.minute === 0) {
+        if (this.dataUser.minute === 0) {
           this.dataUser.timeRemain = this.dataUser.timeRemain - 1
-          this.minute = 59
+          this.dataUser.minute = 59
         }
       }, 1000)
     },

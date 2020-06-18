@@ -42,7 +42,9 @@ export default {
         pcName: 0,
         timeRemain: 0,
         status: false,
-        role: 'ROLE_USER'
+        role: 'ROLE_USER',
+        minute: 59,
+        second: 59
       }
     }
   },
