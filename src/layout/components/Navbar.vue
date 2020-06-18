@@ -81,21 +81,21 @@ export default {
   },
   methods: {
     logout() {
-      const dataLogout = JSON.parse(JSON.stringify(this.dataUserCurrent))
+      const dataLogout = this.dataUserCurrent
       var db = firebase.firestore()
-      VueCookies.set('pcName', dataLogout.pcName, '2h')
-      if (dataLogout.pcName !== '') {
+      if (VueCookies.get('pcName') !== '') {
         var sfDocRef = db.collection('Computer').doc(VueCookies.get('pcName'))
         db.runTransaction((transaction) => {
           return transaction.get(sfDocRef).then((sfDoc) => {
+            console.log(sfDoc)
             if (!sfDoc.exists) {
               console.log('Document does not exist!')
             }
-            var newStatus = false
+            const newStatus = false
             transaction.update(sfDocRef, { status: newStatus })
           })
-        }).then((newStatus) => {
-          console.log('status increased to ', newStatus)
+        }).then(() => {
+          console.log('status change to succsess')
         }).catch((error) => {
           console.log('Transaction failed: ', error)
         })

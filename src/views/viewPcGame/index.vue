@@ -44,6 +44,7 @@ export default {
       try {
         const db = firebase.firestore()
         const docpcName = db.collection('Computer').doc(pcName)
+        VueCookies.set('pcName', pcName, '2h')
         const res = await docpcName.get()
         if (!res.data().status) {
           await db.collection('User').doc(VueCookies.get('username')).update('pcName', pcName)

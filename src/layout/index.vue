@@ -1,13 +1,16 @@
 <template>
     <div class="mainStyle">
         <el-row :gutter="24">
+          <el-col :span="20" :offset="2">
+            <div>
         <el-header>
            <Navbar />
         </el-header>
         <el-main >
         <app />
         </el-main>
-
+            </div>
+          </el-col>
         </el-row>
     </div>
 </template>
