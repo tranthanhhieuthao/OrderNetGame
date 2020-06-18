@@ -26,6 +26,9 @@
     <el-button @click="Payload">Confirm</el-button>
     </div>
   </el-form-item>
+  <el-form-item label="Time remain">
+    <el-input disabled v-model="timeRemainData"/>
+  </el-form-item>
   <el-form-item label="Action">
     <div style="display:flex;">
     <el-button @click="EditUser" icon="el-icon-edit" >Chỉnh sửa</el-button>
@@ -54,8 +57,13 @@ export default {
         email: '',
         username: '',
         phoneNumber: '',
-        pcName: ''
+        pcName: '',
+        timeRemain: 0
       },
+      count: 0,
+      minute: 59,
+      second: 59,
+      timeRemainData: '',
       moneyCurrentTemp: 0,
       dialogDelete: false,
       showBtnSave: false,
@@ -65,6 +73,21 @@ export default {
   created() {
     this.getDetail()
   },
+  watch: {
+    second() {
+      this.convertTimeRemain()
+    },
+    money() {
+      this.convertTimeRemain()
+    }
+  },
+  computed: {
+    money: {
+      get() {
+        return this.dataUser.moneyCurrent
+      }
+    }
+  },
   methods: {
     getDetail() {
       var db = firebase.firestore()
@@ -72,11 +95,27 @@ export default {
         this.dataUser = res.data()
         this.convertStatus()
         this.credential()
+        this.dataUser.timeRemain = this.dataUser.moneyCurrent / 5000 - 1
       })
     },
     convertStatus() {
       if (this.dataUser.status || this.dataUser.pcName !== 0) this.dataUser.statusCurent = 'Online'
       else this.dataUser.statusCurent = 'Offine'
+    },
+    convertTimeRemain() {
+      this.timeRemainData = this.dataUser.timeRemain + 'h' + ' : ' + this.minute + 'min' + ' : ' + this.second + 's'
+      setTimeout(() => {
+        if (this.second === 0) {
+          this.minute--
+          this.second = 59
+        } else {
+          this.second--
+        }
+        if (this.minute === 0) {
+          this.dataUser.timeRemain = this.dataUser.timeRemain - 1
+          this.minute = 59
+        }
+      }, 1000)
     },
     EditUser() {
       this.disableEdit = false
@@ -91,17 +130,15 @@ export default {
         await auth.updateEmail(this.dataUser.email + '')
         await auth.updatePassword(this.dataUser.password + '')
         await db.collection('User').doc(this.$route.params.id).update(this.dataUser)
+        await auth.updatePassword(this.dataUser.password + '')
+        this.convertTimeRemain()
+        // await auth.updateEmail(this.dataUser.email + '')
         this.$notify({
           title: 'Success',
           message: 'Update success',
           type: 'success',
           position: 'bottom-right'
         })
-      // console.log(this.dataUser.password)
-      // auth.updatePassword(this.dataUser.password + '').then(res => console.log('success')).catch(er => {
-      //   console.log(er)
-      // })
-      // auth.updateEmail(this.dataUser.email + '').then(res => console.log(res))
       } catch (er) {
         console.log(er)
       }
