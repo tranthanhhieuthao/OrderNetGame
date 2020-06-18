@@ -107,7 +107,6 @@ export default {
       else this.dataUser.statusCurent = 'Offine'
     },
     convertTimeRemain() {
-      console.log('chay1')
       this.timeRemainData = this.dataUser.timeRemain + 'h' + ' : ' + this.dataUser.minute + 'min' + ' : ' + this.dataUser.second + 's'
       setTimeout(() => {
         if (this.dataUser.second === 0) {
@@ -128,6 +127,7 @@ export default {
     },
     async saveChange() {
       try {
+        console.log(this.dataUser)
         this.disableEdit = true
         this.showBtnSave = false
         var db = firebase.firestore()

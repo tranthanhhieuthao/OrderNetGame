@@ -105,17 +105,31 @@ export default {
       dataLogout.pcName = ''
       if (dataLogout.status || dataLogout.pcName !== '') dataLogout.statusCurent = 'Online'
       else dataLogout.statusCurent = 'Offine'
-      console.log(VueCookies.get('username'))
-      db.collection('User').doc(VueCookies.get('username')).update(dataLogout).then(() => {
-        VueCookies.set('email', VueCookies.get('email'), '0s')
-        VueCookies.set('Token', VueCookies.get('Token'), '0s')
-        VueCookies.set('username', 'Noname', '12h')
-        this.$store.dispatch('app/dataUserCurrent', {})
-        this.usernameCurrent = VueCookies.get('username')
-        VueCookies.set('pcName', dataLogout.pcName, '0s')
-        this.$router.replace('/login')
-        this.$store.dispatch('app/usernameReload', this.usernameCurrent)
-      }).catch(er => console.log(er))
+
+      var userDocRef = db.collection('User').doc(VueCookies.get('username'))
+      db.runTransaction((transaction) => {
+        return transaction.get(userDocRef).then((sfDoc) => {
+          console.log(sfDoc)
+          if (!sfDoc.exists) {
+            console.log('Document does not exist!')
+          }
+          const newStatusUser = false
+          const newpcName = ''
+          transaction.update(userDocRef, { status: newStatusUser, pcName: newpcName })
+          VueCookies.set('email', VueCookies.get('email'), '0s')
+          VueCookies.set('Token', VueCookies.get('Token'), '0s')
+          VueCookies.set('username', 'Noname', '12h')
+          this.$store.dispatch('app/dataUserCurrent', {})
+          this.usernameCurrent = VueCookies.get('username')
+          VueCookies.set('pcName', dataLogout.pcName, '0s')
+          this.$router.replace('/login')
+          this.$store.dispatch('app/usernameReload', this.usernameCurrent)
+        })
+      }).then(() => {
+        console.log('status change to succsess')
+      }).catch((error) => {
+        console.log('Transaction failed: ', error)
+      })
     }
   }
 }
