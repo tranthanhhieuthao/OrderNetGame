@@ -27,6 +27,35 @@
   </el-dropdown-menu>
 </el-dropdown>
     </el-menu-item>
+     <el-menu-item index="2" class="listpc-sub" style="margin-right:30px;">
+        <router-link to="/listPc">
+         <i class="el-icon-document">List PC</i>
+          </router-link>
+      </el-menu-item>
+       <el-menu-item index="3" class="setting-sub" style="margin-right:30px;">
+        <router-link :to="{path: `/detail`, params: {id: id}}" >
+         <i class="el-icon-setting">Detail</i>
+          </router-link>
+      </el-menu-item>
+       <el-menu-item style="float:left;">
+         <el-dropdown>
+      <span class="el-dropdown-link">
+        Admin<i class="el-icon-arrow-down el-icon--right"></i>
+      </span>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item>
+          <router-link to="/createPc">
+          <i class="el-icon-setting"> Create PC</i>
+          </router-link>
+        </el-dropdown-item>
+        <el-dropdown-item>
+          <router-link to="/showUser">
+          <i class="el-icon-menu"> List User</i>
+          </router-link>
+        </el-dropdown-item>
+      </el-dropdown-menu>
+       </el-dropdown>
+    </el-menu-item>
 </el-menu>
     </div>
 </template>
@@ -39,9 +68,13 @@ export default {
   data() {
     return {
       usernameCurrent: '',
-      iconreload: 0
+      iconreload: 0,
+      id: VueCookies.get('username')
       // dataLogout: {}
     }
+  },
+  created() {
+    this.id = VueCookies.get('username')
   },
   computed: {
     ...mapGetters(['usernameReload', 'dataUserCurrent'])
