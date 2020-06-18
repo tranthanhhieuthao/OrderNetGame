@@ -77,22 +77,13 @@ export default {
     second() {
       this.convertTimeRemain()
     },
-    money() {
-      this.convertTimeRemain()
-    },
     namePcStartTime() {
-      if (this.namePcStartTime !== '') {
+      if (this.namePcStartTime !== 0) {
         this.convertTimeRemain()
-        this.dataUser.timeRemain = this.dataUser.moneyCurrent / 5000 - 1
       }
     }
   },
   computed: {
-    money: {
-      get() {
-        return this.dataUser.moneyCurrent
-      }
-    },
     namePcStartTime: {
       get() {
         return this.dataUser.pcName
@@ -106,6 +97,8 @@ export default {
         this.dataUser = res.data()
         this.convertStatus()
         this.credential()
+        this.dataUser.timeRemain = this.dataUser.moneyCurrent / 5000 - 1
+        this.timeRemainData = this.dataUser.timeRemain + 'h' + ' : ' + this.minute + 'min' + ' : ' + this.second + 's'
       })
     },
     convertStatus() {
