@@ -119,7 +119,8 @@ router.beforeEach((to, from, next) => {
   var db = firebase.firestore()
   var count = 0
   console.log(VueCookies.get('username'))
-  if (store.state.app.usernameReload !== 'Noname' || VueCookies.get('username') !== 'Noname') {
+  if (store.state.app.usernameReload !== 'Noname' || VueCookies.get('username') !== null) {
+    console.log(VueCookies.get('username'))
     db.collection('User').doc(VueCookies.get('username')).get().then(res => {
       if (to.meta.roles !== undefined) {
         to.meta.roles.forEach(e => {

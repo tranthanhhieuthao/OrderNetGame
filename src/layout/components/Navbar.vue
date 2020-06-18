@@ -80,10 +80,11 @@ export default {
     ...mapGetters(['usernameReload', 'dataUserCurrent'])
   },
   methods: {
-    logout() {
+    async logout() {
       const dataLogout = this.dataUserCurrent
+      console.log(VueCookies.get('pcName'))
       var db = firebase.firestore()
-      if (VueCookies.get('pcName') !== '') {
+      if (VueCookies.get('pcName') !== null) {
         var sfDocRef = db.collection('Computer').doc(VueCookies.get('pcName'))
         db.runTransaction((transaction) => {
           return transaction.get(sfDocRef).then((sfDoc) => {
@@ -104,6 +105,7 @@ export default {
       dataLogout.pcName = ''
       if (dataLogout.status || dataLogout.pcName !== '') dataLogout.statusCurent = 'Online'
       else dataLogout.statusCurent = 'Offine'
+      console.log(VueCookies.get('username'))
       db.collection('User').doc(VueCookies.get('username')).update(dataLogout).then(() => {
         VueCookies.set('email', VueCookies.get('email'), '0s')
         VueCookies.set('Token', VueCookies.get('Token'), '0s')
@@ -113,7 +115,7 @@ export default {
         VueCookies.set('pcName', dataLogout.pcName, '0s')
         this.$router.replace('/login')
         this.$store.dispatch('app/usernameReload', this.usernameCurrent)
-      })
+      }).catch(er => console.log(er))
     }
   }
 }
