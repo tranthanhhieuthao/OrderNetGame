@@ -39,8 +39,8 @@ export default {
   data() {
     return {
       usernameCurrent: '',
-      iconreload: 0,
-      dataLogout: {}
+      iconreload: 0
+      // dataLogout: {}
     }
   },
   computed: {
@@ -48,23 +48,36 @@ export default {
   },
   methods: {
     logout() {
-      this.dataLogout = this.dataUserCurrent
+      const dataLogout = JSON.parse(JSON.stringify(this.dataUserCurrent))
       var db = firebase.firestore()
-      if (this.dataLogout.pcName !== 0) {
-        var nycRef = db.collection('Computer').doc(this.dataLogout.pcName)
-        db.batch().update(nycRef, {status: false})
-        db.batch().commit().then((res) => console.log(res))
+      VueCookies.set('pcName', dataLogout.pcName, '2h')
+      if (dataLogout.pcName !== '') {
+        var sfDocRef = db.collection('Computer').doc(VueCookies.get('pcName'))
+        db.runTransaction((transaction) => {
+          return transaction.get(sfDocRef).then((sfDoc) => {
+            if (!sfDoc.exists) {
+              console.log('Document does not exist!')
+            }
+            var newStatus = false
+            transaction.update(sfDocRef, { status: newStatus })
+          })
+        }).then((newStatus) => {
+          console.log('status increased to ', newStatus)
+        }).catch((error) => {
+          console.log('Transaction failed: ', error)
+        })
       }
-      this.dataLogout.status = false
-      this.dataLogout.pcName = 0
-      if (this.dataLogout.status || this.dataLogout.pcName !== 0) this.dataLogout.statusCurent = 'Online'
-      else this.dataLogout.statusCurent = 'Offine'
-      db.collection('User').doc(VueCookies.get('username')).update(this.dataLogout).then(() => {
+      dataLogout.status = false
+      dataLogout.pcName = ''
+      if (dataLogout.status || dataLogout.pcName !== '') dataLogout.statusCurent = 'Online'
+      else dataLogout.statusCurent = 'Offine'
+      db.collection('User').doc(VueCookies.get('username')).update(dataLogout).then(() => {
         VueCookies.set('email', VueCookies.get('email'), '0s')
         VueCookies.set('Token', VueCookies.get('Token'), '0s')
         VueCookies.set('username', 'Noname', '12h')
         this.$store.dispatch('app/dataUserCurrent', {})
         this.usernameCurrent = VueCookies.get('username')
+        VueCookies.set('pcName', dataLogout.pcName, '0s')
         this.$router.replace('/login')
         this.$store.dispatch('app/usernameReload', this.usernameCurrent)
       })

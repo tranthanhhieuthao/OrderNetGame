@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import getters from './getters'
-import createPersistedState from 'vuex-persistedstate'
+// import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(Vuex)
 const modulesFiles = require.context('./modules', true, /\.js$/)
@@ -13,8 +13,8 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
 }, {})
 export default new Vuex.Store({
   modules,
-  getters,
+  getters
   // dung de khi reload page store van luu gia tri
-  plugins: [createPersistedState()]
+  // plugins: [createPersistedState()]
 
 })
