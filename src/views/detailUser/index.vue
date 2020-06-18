@@ -79,12 +79,23 @@ export default {
     },
     money() {
       this.convertTimeRemain()
+    },
+    namePcStartTime() {
+      if (this.namePcStartTime !== '') {
+        this.convertTimeRemain()
+        this.dataUser.timeRemain = this.dataUser.moneyCurrent / 5000 - 1
+      }
     }
   },
   computed: {
     money: {
       get() {
         return this.dataUser.moneyCurrent
+      }
+    },
+    namePcStartTime: {
+      get() {
+        return this.dataUser.pcName
       }
     }
   },
@@ -95,7 +106,6 @@ export default {
         this.dataUser = res.data()
         this.convertStatus()
         this.credential()
-        this.dataUser.timeRemain = this.dataUser.moneyCurrent / 5000 - 1
       })
     },
     convertStatus() {
@@ -131,7 +141,6 @@ export default {
         await auth.updatePassword(this.dataUser.password + '')
         await db.collection('User').doc(this.$route.params.id).update(this.dataUser)
         await auth.updatePassword(this.dataUser.password + '')
-        this.convertTimeRemain()
         // await auth.updateEmail(this.dataUser.email + '')
         this.$notify({
           title: 'Success',
