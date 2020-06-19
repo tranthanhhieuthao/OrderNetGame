@@ -90,7 +90,10 @@ export default {
         email: '',
         username: '',
         phoneNumber: '',
-        pcName: ''
+        pcName: '',
+        timeRemain: 0,
+        minute: 0,
+        second: 0
       },
       dataTime: {
         hour: 0,
