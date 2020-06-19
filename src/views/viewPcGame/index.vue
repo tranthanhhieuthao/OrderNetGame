@@ -8,7 +8,8 @@
         <span>{{item.namePc}}: </span>
         <span>{{item.statusConvert}}</span>
         <div class="bottom clearfix">
-          <el-button type="text" class="button" @click="OderPc(item.namePc)">Đặt chỗ</el-button>
+          <el-button type="text" v-if="!item.status" class="button" @click="OderPc(item.namePc)">Đặt chỗ</el-button>
+          <el-button type="text" v-else class="button" @click="cancellOderPc(item.namePc)">Hủy</el-button>
         </div>
       </div>
     </el-card>
@@ -25,7 +26,7 @@ export default {
     return {
       listPc: [],
       usernameOder: '',
-      order: false
+      order: true
     }
   },
   mounted() {
@@ -68,12 +69,30 @@ export default {
         console.log(er)
       }
     },
-    ConvertStstusPc() {
-      this.listPc.forEach(e => {
-        if (e.status) e.statusConvert = 'Đang hoạt động'
-        else e.statusConvert = 'Đang tắt'
-      })
+    async cancellOderPc(pcName) {
+      try {
+        const db = firebase.firestore()
+        const docpcName = db.collection('Computer').doc(pcName)
+        VueCookies.set('pcName', '', '2h')
+        await db.collection('User').doc(VueCookies.get('username')).update('pcName', '')
+        await docpcName.update('status', false)
+        this.$notify({
+          title: 'Success',
+          message: 'Cancell success',
+          type: 'success',
+          position: 'bottom-right'
+        })
+        this.getListPc()
+      } catch (er) {
+        console.log(er)
+      }
     }
+  },
+  ConvertStstusPc() {
+    this.listPc.forEach(e => {
+      if (e.status) e.statusConvert = 'Đang hoạt động'
+      else e.statusConvert = 'Đang tắt'
+    })
   }
 }
 </script>

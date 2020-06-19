@@ -56,6 +56,19 @@
       </el-dropdown-menu>
        </el-dropdown>
     </el-menu-item>
+    <el-menu-item>
+      <div id="clockdiv">
+  <div>
+    <span class="hours" id="hour">01</span>
+  </div>
+  <div>
+    <span class="minutes" id="minute">59</span>
+  </div>
+  <div>
+    <span class="seconds" id="second">59</span>
+  </div>
+</div>
+    </el-menu-item>
 </el-menu>
     </div>
 </template>
@@ -136,5 +149,23 @@ export default {
 </script>
 
 <style scoped>
-
+ #clockdiv{
+    font-family: sans-serif;
+    color: #fff;
+    display: inline-block;
+    font-weight: 100;
+    text-align: center;
+    font-size: 25px;
+}
+#clockdiv > div{
+    border-radius: 3px;
+    display: inline;
+     text-align: center;
+}
+#clockdiv div > span{
+    padding: 10px;
+    border-radius: 3px;
+    background: #63706d;
+    display: inline;
+}
 </style>

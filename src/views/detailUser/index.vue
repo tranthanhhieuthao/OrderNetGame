@@ -49,6 +49,7 @@
 
 <script>
 import firebase from 'firebase'
+import VueCookies from 'vue-cookies'
 export default {
   data() {
     return {
@@ -73,7 +74,6 @@ export default {
   },
   watch: {
     second() {
-      console.log(this.second)
       if (this.namePcStartTime !== '') {
         this.convertTimeRemain()
       }
@@ -98,7 +98,9 @@ export default {
         this.dataUser = res.data()
         this.convertStatus()
         this.credential()
-        this.dataUser.timeRemain = this.dataUser.moneyCurrent / 5000 - 1
+        if (this.checkTime()) {
+          this.dataUser.timeRemain = this.dataUser.moneyCurrent / 5000
+        }
         this.timeRemainData = this.dataUser.timeRemain + 'h' + ' : ' + this.dataUser.minute + 'min' + ' : ' + this.dataUser.second + 's'
       })
     },
@@ -108,22 +110,43 @@ export default {
     },
     convertTimeRemain() {
       this.timeRemainData = this.dataUser.timeRemain + 'h' + ' : ' + this.dataUser.minute + 'min' + ' : ' + this.dataUser.second + 's'
-      setTimeout(() => {
-        if (this.dataUser.second === 0) {
+      var timeUse = setTimeout(() => {
+        if (this.dataUser.second === 0 && this.dataUser.minute === 0 &&
+        this.dataUser.timeRemain !== 0) {
+          this.dataUser.second = 59
+        }
+        if (this.dataUser.second === 0 && this.dataUser.minute !== 0) {
           this.dataUser.minute--
           this.dataUser.second = 59
         } else {
           this.dataUser.second--
+          if (this.dataUser.minute === 0 && this.dataUser.timeRemain !== 0) {
+            this.dataUser.timeRemain = this.dataUser.timeRemain - 1
+            this.dataUser.minute = 59
+          }
         }
-        if (this.dataUser.minute === 0) {
-          this.dataUser.timeRemain = this.dataUser.timeRemain - 1
-          this.dataUser.minute = 59
-        }
+
+        this.saveDataTimeRemain()
       }, 1000)
+      if (this.checkTime()) {
+        this.$notify({
+          title: 'Warning',
+          message: 'Thời gian sử dụng đã hết ,vui lòng nạp thêm',
+          type: 'warning',
+          position: 'bottom-right'
+        })
+        clearTimeout(timeUse)
+      }
     },
     EditUser() {
       this.disableEdit = false
       this.showBtnSave = true
+    },
+    checkTime() {
+      if (this.dataUser.timeRemain === 0 && this.dataUser.minute === 0 && this.dataUser.second === 0) {
+        return true
+      }
+      return false
     },
     async saveChange() {
       try {
@@ -146,6 +169,25 @@ export default {
       } catch (er) {
         console.log(er)
       }
+    },
+    saveDataTimeRemain() {
+      var db = firebase.firestore()
+      var sfDocRef = db.collection('User').doc(VueCookies.get('username'))
+      db.runTransaction((transaction) => {
+        return transaction.get(sfDocRef).then((sfDoc) => {
+          console.log(sfDoc)
+          if (!sfDoc.exists) {
+            console.log('Document does not exist!')
+          }
+          const newTimeRemain = this.dataUser.timeRemain
+          const newMinute = this.dataUser.minute
+          const newScond = this.dataUser.second
+          transaction.update(sfDocRef, { timeRemain: newTimeRemain, minute: newMinute, second: newScond })
+        })
+      }).then(() => {
+      }).catch((error) => {
+        console.log('Transaction failed: ', error)
+      })
     },
     Delete() {
       var db = firebase.firestore()
