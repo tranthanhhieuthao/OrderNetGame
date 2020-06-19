@@ -132,7 +132,7 @@ export default {
   methods: {
     getData() {
       var db = firebase.firestore()
-      db.collection('User').doc(this.id).get().then(res => {
+      db.collection('User').doc(this.id).onSnapshot(res => {
         this.dataUser = res.data()
         if (this.checkTime()) {
           this.dataUser.timeRemain = this.dataUser.moneyCurrent / 5000
