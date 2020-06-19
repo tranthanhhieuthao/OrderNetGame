@@ -5,6 +5,7 @@
   mode="horizontal"
   background-color="#545c64"
   text-color="#fff"
+  key="menuKey"
   active-text-color="#ffd04b">
   <el-menu-item />
     <el-menu-item style="float:right;">
@@ -59,13 +60,13 @@
     <el-menu-item >
       <div id="clockdiv">
   <div>
-    <span class="hours" id="hour">{{ dataTime.hour + 'h' }}</span>
+    <span class="hours" id="hour">{{ dataUser.timeRemain + 'h' }}</span>
   </div>
   <div>
-    <span class="minutes" id="minute">{{ dataTime.minute + 'min' }}</span>
+    <span class="minutes" id="minute">{{ dataUser.minute + 'min' }}</span>
   </div>
   <div>
-    <span class="seconds" id="second">{{ dataTime.second + 's' }}</span>
+    <span class="seconds" id="second">{{ dataUser.second + 's' }}</span>
   </div>
 </div>
     </el-menu-item>
@@ -83,6 +84,14 @@ export default {
       usernameCurrent: '',
       iconreload: 0,
       id: VueCookies.get('username'),
+      menuKey: 0,
+      dataUser: {
+        password: '',
+        email: '',
+        username: '',
+        phoneNumber: '',
+        pcName: ''
+      },
       dataTime: {
         hour: 0,
         minute: 0,
@@ -95,25 +104,102 @@ export default {
     this.id = VueCookies.get('username')
   },
   mounted() {
-    this.convertTimeUseSerive()
+    this.getData()
   },
   watch: {
+    second() {
+      if (VueCookies.get('pcName') !== null) {
+        this.convertTimeRemain()
+      }
+    },
     timeUseService() {
-      this.convertTimeUseSerive()
+      if (this.timeUseService) {
+        this.convertTimeRemain()
+      }
     }
   },
   computed: {
-    ...mapGetters(['usernameReload', 'dataUserCurrent', 'timeUseService'])
+    ...mapGetters(['usernameReload', 'dataUserCurrent', 'timeUseService']),
+    second: {
+      get() {
+        return this.dataUser.second
+      }
+    }
   },
   methods: {
-    convertTimeUseSerive() {
-      var temp = this.timeUseService.replace(/[^0-9:]/g, '').split(':')
-      this.dataTime.hour = temp[0]
-      this.dataTime.minute = temp[1]
-      this.dataTime.second = temp[2] - 1
+    getData() {
+      var db = firebase.firestore()
+      db.collection('User').doc(this.id).get().then(res => {
+        this.dataUser = res.data()
+        if (this.checkTime()) {
+          this.dataUser.timeRemain = this.dataUser.moneyCurrent / 5000
+        } else this.dataUser.moneyCurrent = 0
+      })
+    },
+    saveDataTimeRemain() {
+      var db = firebase.firestore()
+      var sfDocRef = db.collection('User').doc(VueCookies.get('username'))
+      db.runTransaction((transaction) => {
+        return transaction.get(sfDocRef).then((sfDoc) => {
+          console.log(sfDoc)
+          if (!sfDoc.exists) {
+            console.log('Document does not exist!')
+          }
+          const newTimeRemain = this.dataUser.timeRemain
+          const newMinute = this.dataUser.minute
+          const newScond = this.dataUser.second
+          transaction.update(sfDocRef, { timeRemain: newTimeRemain, minute: newMinute, second: newScond })
+        })
+      }).then(() => {
+      }).catch((error) => {
+        console.log('Transaction failed: ', error)
+      })
+    },
+    checkTime() {
+      if (this.dataUser.timeRemain === 0 && this.dataUser.minute === 0 && this.dataUser.second === 0) {
+        return true
+      }
+      return false
+    },
+    convertTimeRemain() {
+      var timeUse = setTimeout(() => {
+        if (this.dataUser.second === 0 && this.dataUser.minute === 5 &&
+        this.dataUser.timeRemain === 0) {
+          this.$notify({
+            title: 'Warning',
+            message: 'Thời gian sử dụng sắp hết, còn 5 phút',
+            type: 'warning',
+            position: 'bottom-right'
+          })
+        }
+        if (this.dataUser.second === 0 && this.dataUser.minute === 0 &&
+        this.dataUser.timeRemain !== 0) {
+          this.dataUser.second = 59
+        }
+        if (this.dataUser.second === 0 && this.dataUser.minute !== 0) {
+          this.dataUser.minute--
+          this.dataUser.second = 59
+        } else {
+          this.dataUser.second--
+          if (this.dataUser.minute === 0 && this.dataUser.timeRemain !== 0) {
+            this.dataUser.timeRemain = this.dataUser.timeRemain - 1
+            this.dataUser.minute = 59
+          }
+        }
+        this.saveDataTimeRemain()
+      }, 1000)
+      if (this.checkTime()) {
+        this.$notify({
+          title: 'Warning',
+          message: 'Thời gian sử dụng đã hết ,vui lòng nạp thêm',
+          type: 'warning',
+          position: 'bottom-right'
+        })
+        clearTimeout(timeUse)
+      }
     },
     async logout() {
-      const dataLogout = this.dataUserCurrent
+      const dataLogout = this.dataUser
       console.log(VueCookies.get('pcName'))
       var db = firebase.firestore()
       if (VueCookies.get('pcName') !== null) {
@@ -151,7 +237,7 @@ export default {
           VueCookies.set('email', VueCookies.get('email'), '0s')
           VueCookies.set('Token', VueCookies.get('Token'), '0s')
           VueCookies.set('username', 'Noname', '12h')
-          this.$store.dispatch('app/dataUserCurrent', {})
+          this.$store.dispatch('app/dataUser', {})
           this.usernameCurrent = VueCookies.get('username')
           VueCookies.set('pcName', dataLogout.pcName, '0s')
           this.$router.replace('/login')
@@ -175,7 +261,6 @@ export default {
     font-weight: 100;
     text-align: center;
     font-size: 25px;
-    margin-left: 700px;
 }
 #clockdiv > div{
     border-radius: 3px;

@@ -56,7 +56,9 @@ export default {
             type: 'success',
             position: 'bottom-right'
           })
-          this.$router.replace('/detail/' + VueCookies.get('username'))
+          VueCookies.get('pcName', pcName)
+          this.$store.dispatch('app/timeUseServiceCurrent', true)
+          this.getListPc()
         } else {
           this.$notify({
             title: 'chỗ đã được đặt',
@@ -82,6 +84,7 @@ export default {
           type: 'success',
           position: 'bottom-right'
         })
+        this.$store.dispatch('app/timeUseServiceCurrent', false)
         this.getListPc()
       } catch (er) {
         console.log(er)

@@ -4,7 +4,7 @@ const state = {
   usernameReload: VueCookies.get('username') !== null ? VueCookies.get('username') : 'Noname',
   dataUserCurrent: {},
   device: 'desktop',
-  timeUseService: '0h:0min:0s'
+  timeUseService: false
 }
 
 const mutations = {
