@@ -56,16 +56,16 @@
       </el-dropdown-menu>
        </el-dropdown>
     </el-menu-item>
-    <el-menu-item>
+    <el-menu-item >
       <div id="clockdiv">
   <div>
-    <span class="hours" id="hour">01</span>
+    <span class="hours" id="hour">{{ dataTime.hour + 'h' }}</span>
   </div>
   <div>
-    <span class="minutes" id="minute">59</span>
+    <span class="minutes" id="minute">{{ dataTime.minute + 'min' }}</span>
   </div>
   <div>
-    <span class="seconds" id="second">59</span>
+    <span class="seconds" id="second">{{ dataTime.second + 's' }}</span>
   </div>
 </div>
     </el-menu-item>
@@ -82,17 +82,36 @@ export default {
     return {
       usernameCurrent: '',
       iconreload: 0,
-      id: VueCookies.get('username')
+      id: VueCookies.get('username'),
+      dataTime: {
+        hour: 0,
+        minute: 0,
+        second: 0
+      }
       // dataLogout: {}
     }
   },
   created() {
     this.id = VueCookies.get('username')
   },
+  mounted() {
+    this.convertTimeUseSerive()
+  },
+  watch: {
+    timeUseService() {
+      this.convertTimeUseSerive()
+    }
+  },
   computed: {
-    ...mapGetters(['usernameReload', 'dataUserCurrent'])
+    ...mapGetters(['usernameReload', 'dataUserCurrent', 'timeUseService'])
   },
   methods: {
+    convertTimeUseSerive() {
+      var temp = this.timeUseService.replace(/[^0-9:]/g, '').split(':')
+      this.dataTime.hour = temp[0]
+      this.dataTime.minute = temp[1]
+      this.dataTime.second = temp[2] - 1
+    },
     async logout() {
       const dataLogout = this.dataUserCurrent
       console.log(VueCookies.get('pcName'))
@@ -151,11 +170,12 @@ export default {
 <style scoped>
  #clockdiv{
     font-family: sans-serif;
-    color: #fff;
+    color: rgb(28, 39, 197);
     display: inline-block;
     font-weight: 100;
     text-align: center;
     font-size: 25px;
+    margin-left: 700px;
 }
 #clockdiv > div{
     border-radius: 3px;

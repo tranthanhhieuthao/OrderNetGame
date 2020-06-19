@@ -38,7 +38,7 @@ export default {
       var db = firebase.firestore()
       db.collection('Computer').get().then(res => {
         res.forEach(e => this.listPc.push(e.data()))
-        this.ConvertStstusPc()
+        this.ConvertStastusPc()
       })
     },
     async OderPc(pcName) {
@@ -56,7 +56,7 @@ export default {
             type: 'success',
             position: 'bottom-right'
           })
-          this.getListPc()
+          this.$router.replace('/detail/' + VueCookies.get('username'))
         } else {
           this.$notify({
             title: 'chỗ đã được đặt',
@@ -86,14 +86,15 @@ export default {
       } catch (er) {
         console.log(er)
       }
+    },
+    ConvertStastusPc() {
+      this.listPc.forEach(e => {
+        if (e.status) e.statusConvert = 'Đang hoạt động'
+        else e.statusConvert = 'Đang tắt'
+      })
     }
-  },
-  ConvertStstusPc() {
-    this.listPc.forEach(e => {
-      if (e.status) e.statusConvert = 'Đang hoạt động'
-      else e.statusConvert = 'Đang tắt'
-    })
   }
+
 }
 </script>
 

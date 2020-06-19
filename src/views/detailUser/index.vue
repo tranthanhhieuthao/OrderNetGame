@@ -19,6 +19,9 @@
   <el-form-item label="phoneNumber">
     <el-input :disabled="disableEdit" v-model="dataUser.phoneNumber"></el-input>
   </el-form-item>
+  <el-form-item label="History Money">
+    <el-input disabled v-model="dataUser.historyMoney"></el-input>
+  </el-form-item>
    <el-form-item label="Money current/Payment">
     <div style="display:flex;">
       <el-input disabled v-model="dataUser.moneyCurrent" style="margin-right:10px;"></el-input>
@@ -100,8 +103,10 @@ export default {
         this.credential()
         if (this.checkTime()) {
           this.dataUser.timeRemain = this.dataUser.moneyCurrent / 5000
-        }
-        this.timeRemainData = this.dataUser.timeRemain + 'h' + ' : ' + this.dataUser.minute + 'min' + ' : ' + this.dataUser.second + 's'
+        } else this.dataUser.moneyCurrent = 0
+        this.timeRemainData = this.dataUser.timeRemain + 'h' + ':' + this.dataUser.minute + 'min' + ':' + this.dataUser.second + 's'
+        this.$store.dispatch('app/timeUseServiceCurrent', this.timeRemainData)
+        console.log(this.$store.state.app.timeUseService)
       })
     },
     convertStatus() {
@@ -109,7 +114,7 @@ export default {
       else this.dataUser.statusCurent = 'Offine'
     },
     convertTimeRemain() {
-      this.timeRemainData = this.dataUser.timeRemain + 'h' + ' : ' + this.dataUser.minute + 'min' + ' : ' + this.dataUser.second + 's'
+      this.timeRemainData = this.dataUser.timeRemain + 'h' + ':' + this.dataUser.minute + 'min' + ':' + this.dataUser.second + 's'
       var timeUse = setTimeout(() => {
         if (this.dataUser.second === 0 && this.dataUser.minute === 0 &&
         this.dataUser.timeRemain !== 0) {
@@ -125,7 +130,7 @@ export default {
             this.dataUser.minute = 59
           }
         }
-
+        this.$store.dispatch('app/timeUseServiceCurrent', this.timeRemainData)
         this.saveDataTimeRemain()
       }, 1000)
       if (this.checkTime()) {
@@ -223,9 +228,19 @@ export default {
       }
     },
     Payload() {
-      this.dataUser.moneyCurrent += parseInt(this.moneyCurrentTemp)
-      this.moneyCurrentTemp = 0
-      this.saveChange()
+      if (this.moneyCurrentTemp % 5000 === 0) {
+        this.dataUser.moneyCurrent = parseInt(this.moneyCurrentTemp)
+        this.dataUser.historyMoney += parseInt(this.moneyCurrentTemp)
+        this.moneyCurrentTemp = 0
+        this.saveChange()
+      } else {
+        this.$notify({
+          title: 'Warning',
+          message: 'Xin hãy nạp bội số của 5000',
+          type: 'warning',
+          position: 'bottom-right'
+        })
+      }
     }
   }
 }

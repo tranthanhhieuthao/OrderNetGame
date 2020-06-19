@@ -3,7 +3,8 @@ import firebase from 'firebase'
 const state = {
   usernameReload: VueCookies.get('username') !== null ? VueCookies.get('username') : 'Noname',
   dataUserCurrent: {},
-  device: 'desktop'
+  device: 'desktop',
+  timeUseService: '0h:0min:0s'
 }
 
 const mutations = {
@@ -15,6 +16,9 @@ const mutations = {
   },
   TOGGLE_DEVICE: (state, device) => {
     state.device = device
+  },
+  TIME_USE_SERVICE: (state, value) => {
+    state.timeUseService = value
   }
 }
 
@@ -34,6 +38,9 @@ const actions = {
   },
   toggleDevice({ commit }, device) {
     commit('TOGGLE_DEVICE', device)
+  },
+  timeUseServiceCurrent({ commit }, value) {
+    commit('TIME_USE_SERVICE', value)
   }
 }
 
