@@ -17,11 +17,6 @@
      <i class="el-icon-user-solid"> Login</i>
       </router-link>
     </el-dropdown-item>
-    <el-dropdown-item>
-      <router-link to="/register">
-     <i class="el-icon-user"> Register</i>
-      </router-link>
-    </el-dropdown-item>
     <el-dropdown-item >
       <i class="el-icon-remove-outline" @click="logout">Logout</i>
     </el-dropdown-item>
