@@ -73,7 +73,7 @@ export default {
   methods: {
     getDetail() {
       var db = firebase.firestore()
-      db.collection('User').doc(this.$route.params.id).get().then(res => {
+      db.collection('User').doc(this.$route.params.id).onSnapshot(res => {
         this.dataUser = res.data()
         this.convertStatus()
         this.credential()
@@ -81,7 +81,6 @@ export default {
           this.dataUser.timeRemain = this.dataUser.moneyCurrent / 5000
         } else this.dataUser.moneyCurrent = 0
         this.timeRemainData = this.dataUser.timeRemain + 'h' + ':' + this.dataUser.minute + 'min' + ':' + this.dataUser.second + 's'
-        this.$store.dispatch('app/timeUseServiceCurrent', this.timeRemainData)
       })
     },
     convertStatus() {
