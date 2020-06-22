@@ -69,12 +69,12 @@ const routes = [
     ]
   },
   {
-    path: '/login',
+    path: '/',
     name: 'login',
     component: layout,
     children: [
       {
-        path: '/login',
+        path: '/',
         component: () => import('@/components/login'),
         meta: {
           requiresAuth: false,
