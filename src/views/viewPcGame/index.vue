@@ -46,7 +46,6 @@ export default {
         this.resData = res
         this.changeList()
         this.ConvertStastusPc()
-        HTMLFormControlsCollection(this.listPc)
       })
     },
     changeList() {
