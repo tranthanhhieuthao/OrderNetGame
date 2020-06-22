@@ -1,7 +1,7 @@
 <template>
     <div>
-        <el-row>
-  <el-col :span="8" v-for="item of listPc" :key="item.namePc">
+        <el-row >
+  <el-col :span="8" v-for="item of listPc" :key="item.id">
         <el-card :body-style="{ padding: '0px' }" shadow="hover" class="showPC">
       <img :src="item.img" class="image">
       <div style="padding: 14px;">
@@ -26,20 +26,33 @@ export default {
     return {
       listPc: [],
       usernameOder: '',
-      order: true
+      order: true,
+      resData: null
     }
   },
   mounted() {
     this.getListPc()
   },
+  watch: {
+    resData() {
+      this.changeList()
+    }
+  },
   methods: {
     getListPc() {
       this.listPc = []
       var db = firebase.firestore()
-      db.collection('Computer').get().then(res => {
-        res.forEach(e => this.listPc.push(e.data()))
+      db.collection('Computer').onSnapshot(res => {
+        this.resData = res
+        this.changeList()
         this.ConvertStastusPc()
+        HTMLFormControlsCollection(this.listPc)
       })
+    },
+    changeList() {
+      var temp = []
+      this.resData.forEach(e => temp.push(e.data()))
+      this.listPc = temp
     },
     async OderPc(pcName) {
       try {
@@ -68,7 +81,6 @@ export default {
           })
           VueCookies.get('pcName', pcName)
           this.$store.dispatch('app/timeUseServiceCurrent', true)
-          this.getListPc()
         } else {
           this.$notify({
             title: 'chỗ đã được đặt',
@@ -95,7 +107,6 @@ export default {
           position: 'bottom-right'
         })
         this.$store.dispatch('app/timeUseServiceCurrent', false)
-        this.getListPc()
       } catch (er) {
         console.log(er)
       }
