@@ -57,7 +57,6 @@ export default {
         }
         VueCookies.set('pcName', pcName, '2h')
         const res = await docpcName.get()
-
         if (!res.data().status) {
           await db.collection('User').doc(VueCookies.get('username')).update('pcName', pcName)
           await docpcName.update('status', true)

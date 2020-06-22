@@ -118,6 +118,11 @@ export default {
       if (this.usernameReload !== 'Noname') {
         this.getData()
       }
+    },
+    timeUseService() {
+      if (this.timeUseService) {
+        this.convertTimeRemain()
+      }
     }
   },
   computed: {
