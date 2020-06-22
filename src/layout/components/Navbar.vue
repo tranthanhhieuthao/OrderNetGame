@@ -244,6 +244,16 @@ export default {
           this.$store.dispatch('app/dataUser', {})
           this.usernameCurrent = VueCookies.get('username')
           VueCookies.set('pcName', dataLogout.pcName, '0s')
+          this.dataUser = {
+            password: '',
+            email: '',
+            username: '',
+            phoneNumber: '',
+            pcName: '',
+            timeRemain: 0,
+            minute: 0,
+            second: 0
+          }
           this.$router.replace('/login')
           this.$store.dispatch('app/usernameReload', this.usernameCurrent)
         })
