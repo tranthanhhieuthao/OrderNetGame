@@ -45,8 +45,19 @@ export default {
       try {
         const db = firebase.firestore()
         const docpcName = db.collection('Computer').doc(pcName)
+        if (VueCookies.get('pcName') !== pcName && VueCookies.get('pcName') !== null) {
+          console.log(VueCookies.get('pcName'))
+          this.$notify({
+            title: 'warning',
+            message: 'You aldready order, please cancel your pc picked before',
+            type: 'warning',
+            position: 'bottom-right'
+          })
+          return 0
+        }
         VueCookies.set('pcName', pcName, '2h')
         const res = await docpcName.get()
+
         if (!res.data().status) {
           await db.collection('User').doc(VueCookies.get('username')).update('pcName', pcName)
           await docpcName.update('status', true)
@@ -80,7 +91,7 @@ export default {
         await docpcName.update('status', false)
         this.$notify({
           title: 'Success',
-          message: 'Cancell success',
+          message: 'Cancel success',
           type: 'success',
           position: 'bottom-right'
         })

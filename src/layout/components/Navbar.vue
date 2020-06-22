@@ -30,12 +30,12 @@
     </el-menu-item>
      <el-menu-item index="2" class="listpc-sub" style="margin-right:30px;">
         <router-link to="/listPc">
-         <i class="el-icon-document">List PC</i>
+         <a> List PC</a>
           </router-link>
       </el-menu-item>
        <el-menu-item index="3" class="setting-sub" style="margin-right:30px;">
         <router-link :to="{path: `/detail`, params: {id: id}}" >
-         <i class="el-icon-setting">Detail</i>
+         <a>Detail</a>
           </router-link>
       </el-menu-item>
        <el-menu-item style="float:left;">
@@ -60,13 +60,13 @@
     <el-menu-item >
       <div id="clockdiv">
   <div>
-    <span class="hours" id="hour">{{ dataUser.timeRemain + 'h' }}</span>
+    <span class="hours" id="hour">{{ dataUser.timeRemain }}</span>
   </div>
   <div>
-    <span class="minutes" id="minute">{{ dataUser.minute + 'min' }}</span>
+    <span class="minutes" id="minute">{{ dataUser.minute}}</span>
   </div>
   <div>
-    <span class="seconds" id="second">{{ dataUser.second + 's' }}</span>
+    <span class="seconds" id="second">{{ dataUser.second }}</span>
   </div>
 </div>
     </el-menu-item>
@@ -105,13 +105,11 @@ export default {
   },
   created() {
     this.id = VueCookies.get('username')
-  },
-  mounted() {
     this.getData()
   },
   watch: {
     second() {
-      if (VueCookies.get('pcName') !== null) {
+      if (VueCookies.get('pcName') !== null && !this.checkTime()) {
         this.convertTimeRemain()
       }
     },
@@ -241,6 +239,7 @@ export default {
           transaction.update(userDocRef, { status: newStatusUser, pcName: newpcName })
           VueCookies.set('email', VueCookies.get('email'), '0s')
           VueCookies.set('Token', VueCookies.get('Token'), '0s')
+          VueCookies.set('pcName', VueCookies.get('pcName'), '0s')
           VueCookies.set('username', 'Noname', '12h')
           this.$store.dispatch('app/dataUser', {})
           this.usernameCurrent = VueCookies.get('username')
@@ -261,7 +260,7 @@ export default {
 <style scoped>
  #clockdiv{
     font-family: sans-serif;
-    color: rgb(28, 39, 197);
+    color: rgb(20, 20, 20);
     display: inline-block;
     font-weight: 100;
     text-align: center;
@@ -277,5 +276,26 @@ export default {
     border-radius: 3px;
     background: #63706d;
     display: inline;
+}
+.listpc-sub a {
+   float: left;
+  color: #f2f2f2;
+  text-align: center;
+  text-decoration: none;
+  font-size: 17px;
+}
+.setting-sub a {
+   float: left;
+  color: #f2f2f2;
+  text-align: center;
+  text-decoration: none;
+  font-size: 17px;
+}
+.el-dropdown-link {
+   float: left;
+  color: #f2f2f2;
+  text-align: center;
+  text-decoration: none;
+  font-size: 17px;
 }
 </style>
