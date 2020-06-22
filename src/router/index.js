@@ -9,21 +9,6 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    component: layout,
-    children: [
-      {
-        path: '/register',
-        name: 'register',
-        component: () => import('@/components/register'),
-        meta: {
-          requiresAuth: false,
-          roles: []
-        }
-      }
-    ]
-  },
-  {
     path: '/showUser',
     component: layout,
     children: [

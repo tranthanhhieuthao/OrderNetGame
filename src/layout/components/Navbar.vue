@@ -132,12 +132,14 @@ export default {
   methods: {
     getData() {
       var db = firebase.firestore()
-      db.collection('User').doc(this.id).onSnapshot(res => {
-        this.dataUser = res.data()
-        if (this.checkTime()) {
-          this.dataUser.timeRemain = this.dataUser.moneyCurrent / 5000
-        } else this.dataUser.moneyCurrent = 0
-      })
+      if (this.id !== 'Noname') {
+        db.collection('User').doc(this.id).onSnapshot(res => {
+          this.dataUser = res.data()
+          if (this.checkTime()) {
+            this.dataUser.timeRemain = this.dataUser.moneyCurrent / 5000
+          } else this.dataUser.moneyCurrent = 0
+        })
+      }
     },
     saveDataTimeRemain() {
       var db = firebase.firestore()
