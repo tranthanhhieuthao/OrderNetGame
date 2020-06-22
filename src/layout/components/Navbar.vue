@@ -117,6 +117,11 @@ export default {
       if (this.timeUseService) {
         this.convertTimeRemain()
       }
+    },
+    usernameReload() {
+      if (this.usernameReload !== 'Noname') {
+        this.getData()
+      }
     }
   },
   computed: {
