@@ -13,7 +13,7 @@
         {{usernameReload}}
   <el-dropdown-menu slot="dropdown">
     <el-dropdown-item>
-     <router-link to="/login">
+     <router-link to="/">
      <i class="el-icon-user-solid"> Login</i>
       </router-link>
     </el-dropdown-item>
@@ -110,11 +110,6 @@ export default {
   watch: {
     second() {
       if (VueCookies.get('pcName') !== null && !this.checkTime()) {
-        this.convertTimeRemain()
-      }
-    },
-    timeUseService() {
-      if (this.timeUseService) {
         this.convertTimeRemain()
       }
     },
@@ -260,7 +255,7 @@ export default {
             minute: 0,
             second: 0
           }
-          this.$router.replace('/login')
+          this.$router.replace('/')
           this.$store.dispatch('app/usernameReload', this.usernameCurrent)
         })
       }).then(() => {

@@ -123,7 +123,7 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     const Token = VueCookies.get('Token')
     if (Token === null) {
-      next('login')
+      next('')
     } else next()
   } else next()
 })
