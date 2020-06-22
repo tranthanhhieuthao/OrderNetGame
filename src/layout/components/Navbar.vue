@@ -38,7 +38,7 @@
          <a>Detail</a>
           </router-link>
       </el-menu-item>
-       <el-menu-item style="float:left;">
+       <el-menu-item style="float:left;" v-if="id === 'admin'">
          <el-dropdown>
       <span class="el-dropdown-link">
         Admin<i class="el-icon-arrow-down el-icon--right"></i>
@@ -119,6 +119,7 @@ export default {
       }
     },
     usernameReload() {
+      this.id = VueCookies.get('username')
       if (this.usernameReload !== 'Noname') {
         this.getData()
       }
