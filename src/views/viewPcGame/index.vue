@@ -45,13 +45,16 @@ export default {
       db.collection('Computer').onSnapshot(res => {
         this.resData = res
         this.changeList()
-        this.ConvertStastusPc()
       })
     },
     changeList() {
       var temp = []
       this.resData.forEach(e => temp.push(e.data()))
       this.listPc = temp
+      this.listPc.forEach(e => {
+        if (e.status) e.statusConvert = 'Đang hoạt động'
+        else e.statusConvert = 'Đang tắt'
+      })
     },
     async OderPc(pcName) {
       try {
@@ -109,12 +112,6 @@ export default {
       } catch (er) {
         console.log(er)
       }
-    },
-    ConvertStastusPc() {
-      this.listPc.forEach(e => {
-        if (e.status) e.statusConvert = 'Đang hoạt động'
-        else e.statusConvert = 'Đang tắt'
-      })
     }
   }
 
