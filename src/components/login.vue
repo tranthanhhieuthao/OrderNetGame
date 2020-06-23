@@ -79,7 +79,8 @@ export default {
         status: false,
         role: 'ROLE_USER',
         minute: 59,
-        second: 59
+        second: 59,
+        moneyForFood: 100000
       }
     }
   },

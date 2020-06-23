@@ -79,7 +79,20 @@
 <el-dialog
   :visible.sync="dialogCart"
   width="50%">
-  <span>Total: {{ total + 'đ'}}</span>
+  <table>
+  <tr>
+    <td>Money:</td>
+    <td>{{ dataUser.moneyForFood + 'đ'}}</td>
+  </tr>
+  <tr>
+    <td>Total:</td>
+    <td>{{ total + 'đ'}}</td>
+  </tr>
+  <tr>
+    <td>Remain:</td>
+    <td>{{ dataUser.moneyForFood-total + 'đ'}}</td>
+  </tr>
+  </table>
   <hr />
   <el-row>
   <el-col :span="12" v-for="itemImg in dataStock" :key="itemImg.img" >
