@@ -77,13 +77,28 @@
     </el-menu-item>
 </el-menu>
 <el-dialog
-  title="Tips"
   :visible.sync="dialogCart"
   width="30%">
-  <span>{{ stock }}</span>
+  <span>Total: </span>
+  <hr />
+  <el-row>
+  <el-col :span="9" v-for="itemImg in dataStock" :key="itemImg.img" >
+    <el-card :body-style="{ padding: '0px' }" class="showFood">
+      <img :src="itemImg.img" class="image">
+      <div style="padding: 14px;">
+        <span>{{ itemImg.name + ':' }}</span>
+        <span>{{itemImg.money + 'đ'}}</span>
+        <div class="bottom clearfix">
+          <el-button size="mini" type="primary" class="button" @click="handlePick(itemImg)">Order</el-button>
+          <el-button size="mini" type="success" class="buttonLike">{{ itemImg.like + ' '}}+</el-button>
+        </div>
+      </div>
+    </el-card>
+  </el-col>
+</el-row>
   <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogCart = false">Cancel</el-button>
-    <el-button type="primary" @click="dialogCart = false">Confirm</el-button>
+    <el-button size="mini" @click="dialogCart = false">Cancel</el-button>
+    <el-button size="mini" type="primary" @click="dialogCart = false">Confirm</el-button>
   </span>
 </el-dialog>
     </div>
@@ -111,12 +126,14 @@ export default {
         second: 0
       },
       dialogCart: false,
-      stock: 0
+      stock: 0,
+      dataStock: []
     }
   },
   created() {
     this.id = VueCookies.get('username')
     this.stock = JSON.parse(VueCookies.get('orderFoodOfUser')).length
+    this.dataStock = JSON.parse(VueCookies.get('orderFoodOfUser'))
     this.getData()
   },
   watch: {
@@ -137,10 +154,13 @@ export default {
       }
     },
     stockFood() {
-      console.log('hello')
       if (this.stockFood.length !== 0) {
         this.stock = JSON.parse(VueCookies.get('orderFoodOfUser')).length
-      } else this.stock = 0
+        this.dataStock = JSON.parse(VueCookies.get('orderFoodOfUser'))
+      } else {
+        this.stock = 0
+        this.dataStock = []
+      }
     }
   },
   computed: {
@@ -347,4 +367,12 @@ export default {
   justify-content: center;
   margin-top: 20px;
 }
+.showFood {
+      margin: 2px;
+  }
+  .image {
+    width: 350px;
+    display: block;
+    height: 150px;
+  }
 </style>
