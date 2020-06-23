@@ -84,6 +84,21 @@ const routes = [
     ]
   },
   {
+    path: '/food',
+    name: 'Food',
+    component: layout,
+    children: [
+      {
+        path: '/food',
+        component: () => import('@/views/orderFood/index'),
+        meta: {
+          requiresAuth: true,
+          roles: ['ROLE_USER', 'ROLE_ADMIN']
+        }
+      }
+    ]
+  },
+  {
     path: '/about',
     name: 'About',
     // route level code-splitting

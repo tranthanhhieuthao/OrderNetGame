@@ -33,6 +33,11 @@
          <a>Detail</a>
           </router-link>
       </el-menu-item>
+      <el-menu-item class="food-sub" style="margin-right:30px;">
+        <router-link to="/food">
+         <a>Food</a>
+          </router-link>
+      </el-menu-item>
        <el-menu-item style="float:left;" v-if="id === 'admin'">
          <el-dropdown>
       <span class="el-dropdown-link">
@@ -303,6 +308,13 @@ export default {
   font-size: 17px;
 }
 .el-dropdown-link {
+   float: left;
+  color: #f2f2f2;
+  text-align: center;
+  text-decoration: none;
+  font-size: 17px;
+}
+.food-sub {
    float: left;
   color: #f2f2f2;
   text-align: center;
