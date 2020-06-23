@@ -4,7 +4,8 @@ const state = {
   usernameReload: VueCookies.get('username') !== null ? VueCookies.get('username') : 'Noname',
   dataUserCurrent: {},
   device: 'desktop',
-  timeUseService: false
+  timeUseService: false,
+  stockFood: []
 }
 
 const mutations = {
@@ -19,6 +20,9 @@ const mutations = {
   },
   TIME_USE_SERVICE: (state, value) => {
     state.timeUseService = value
+  },
+  STOCK_FOOD_USER: (state, value) => {
+    state.stockFood = value
   }
 }
 
@@ -41,6 +45,9 @@ const actions = {
   },
   timeUseServiceCurrent({ commit }, value) {
     commit('TIME_USE_SERVICE', value)
+  },
+  stockFoodUser({ commit }, value) {
+    commit('STOCK_FOOD_USER', value)
   }
 }
 

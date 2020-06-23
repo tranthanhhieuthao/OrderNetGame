@@ -174,7 +174,6 @@ export default {
 <style lang='scss' scoped>
 .detailUserStyle {
     width: 50%;
-    height: auto;
     font-weight: bolder;
     justify-items: center;
     margin-left: 25%;

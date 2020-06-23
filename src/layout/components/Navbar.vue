@@ -23,6 +23,11 @@
   </el-dropdown-menu>
 </el-dropdown>
     </el-menu-item>
+    <el-menu-item  class="listpc-sub" style="margin-right:30px;float:right;">
+      <el-badge v-model="stock" class="item" type="primary" >
+         <a class="el-icon-shopping-cart-1" @click="dialogCart = true"> Cart</a>
+      </el-badge>
+      </el-menu-item>
      <el-menu-item index="2" class="listpc-sub" style="margin-right:30px;">
         <router-link to="/listPc">
          <a> List PC</a>
@@ -71,6 +76,16 @@
 </div>
     </el-menu-item>
 </el-menu>
+<el-dialog
+  title="Tips"
+  :visible.sync="dialogCart"
+  width="30%">
+  <span>{{ stock }}</span>
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogCart = false">Cancel</el-button>
+    <el-button type="primary" @click="dialogCart = false">Confirm</el-button>
+  </span>
+</el-dialog>
     </div>
 </template>
 
@@ -95,16 +110,13 @@ export default {
         minute: 0,
         second: 0
       },
-      dataTime: {
-        hour: 0,
-        minute: 0,
-        second: 0
-      }
-      // dataLogout: {}
+      dialogCart: false,
+      stock: 0
     }
   },
   created() {
     this.id = VueCookies.get('username')
+    this.stock = JSON.parse(VueCookies.get('orderFoodOfUser')).length
     this.getData()
   },
   watch: {
@@ -123,10 +135,16 @@ export default {
       if (this.timeUseService) {
         this.convertTimeRemain()
       }
+    },
+    stockFood() {
+      console.log('hello')
+      if (this.stockFood.length !== 0) {
+        this.stock = JSON.parse(VueCookies.get('orderFoodOfUser')).length
+      } else this.stock = 0
     }
   },
   computed: {
-    ...mapGetters(['usernameReload', 'dataUserCurrent', 'timeUseService']),
+    ...mapGetters(['usernameReload', 'dataUserCurrent', 'timeUseService', 'stockFood']),
     second: {
       get() {
         return this.dataUser.second
@@ -144,6 +162,9 @@ export default {
           } else this.dataUser.moneyCurrent = 0
         })
       }
+    },
+    clearCookie(name) {
+      VueCookies.set(name.trim() + '', '', '0s')
     },
     saveDataTimeRemain() {
       var db = firebase.firestore()
@@ -208,6 +229,7 @@ export default {
       }
     },
     async logout() {
+      var cookie = document.cookie.split(';')
       const dataLogout = this.dataUser
       console.log(VueCookies.get('pcName'))
       var db = firebase.firestore()
@@ -215,7 +237,6 @@ export default {
         var sfDocRef = db.collection('Computer').doc(VueCookies.get('pcName'))
         db.runTransaction((transaction) => {
           return transaction.get(sfDocRef).then((sfDoc) => {
-            console.log(sfDoc)
             if (!sfDoc.exists) {
               console.log('Document does not exist!')
             }
@@ -236,16 +257,15 @@ export default {
       var userDocRef = db.collection('User').doc(VueCookies.get('username'))
       db.runTransaction((transaction) => {
         return transaction.get(userDocRef).then((sfDoc) => {
-          console.log(sfDoc)
           if (!sfDoc.exists) {
             console.log('Document does not exist!')
           }
           const newStatusUser = false
           const newpcName = ''
           transaction.update(userDocRef, { status: newStatusUser, pcName: newpcName })
-          VueCookies.set('email', VueCookies.get('email'), '0s')
-          VueCookies.set('Token', VueCookies.get('Token'), '0s')
-          VueCookies.set('pcName', VueCookies.get('pcName'), '0s')
+          for (var i = 0; i < cookie.length; i++) {
+            this.clearCookie(cookie[i].split('=')[0])
+          }
           VueCookies.set('username', 'Noname', '12h')
           this.$store.dispatch('app/dataUser', {})
           this.usernameCurrent = VueCookies.get('username')
@@ -262,6 +282,7 @@ export default {
           }
           this.$router.replace('/')
           this.$store.dispatch('app/usernameReload', this.usernameCurrent)
+          this.$store.dispatch('app/stockFoodUser', [])
         })
       }).then(() => {
         console.log('status change to succsess')
@@ -320,5 +341,10 @@ export default {
   text-align: center;
   text-decoration: none;
   font-size: 17px;
+}
+.el-icon-shopping-cart-1 {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 </style>
