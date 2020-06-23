@@ -91,7 +91,7 @@
         <div class="bottom clearfix">
           <el-button size="mini" type="primary" class="button" @click="handlePick(itemImg)">Order</el-button>
           <el-button size="mini" type="success" class="buttonLike">{{ itemImg.like + ' '}}+</el-button>
-          <el-button size="mini" type="danger" class="buttonCan">x</el-button>
+          <el-button size="mini" type="danger" class="buttonCan" @click="removeStockFood(itemImg.idFood)">x</el-button>
         </div>
       </div>
     </el-card>
@@ -211,6 +211,16 @@ export default {
         return true
       }
       return false
+    },
+    removeStockFood(id) {
+      console.log(id)
+      // this.stockFood = [...JSON.parse(VueCookies.get('orderFoodOfUser'))]
+      var temp = this.stockFood.filter(e => {
+        e.idFood !== id
+      })
+      this.stockFood = temp
+      console.log(temp)
+      VueCookies.set('orderFoodOfUser', JSON.stringify(this.stockFood))
     },
     convertTimeRemain() {
       var timeUse = setTimeout(() => {
