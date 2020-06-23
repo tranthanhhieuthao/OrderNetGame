@@ -160,6 +160,7 @@ export default {
       }
     },
     stockFood() {
+      this.total = 0
       if (this.stockFood.length !== 0) {
         this.stock = JSON.parse(VueCookies.get('orderFoodOfUser')).length
         this.dataStock = JSON.parse(VueCookies.get('orderFoodOfUser'))
