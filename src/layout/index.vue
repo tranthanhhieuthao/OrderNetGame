@@ -4,7 +4,7 @@
           <el-col :span="20" :offset="2">
             <div>
         <el-header>
-           <Navbar />
+           <Navbar class="navbar" />
         </el-header>
         <el-main >
         <app />
@@ -39,6 +39,6 @@ export default {
 .mainStyle {
  background-image: url('https://thietbiketnoi.com/wp-content/uploads/2020/01/tong-hop-hinh-nen-background-vector-designer-dep-do-phan-giai-fhd-2k-4k-moi-nhat-3-scaled.jpg');
  background-repeat: no-repeat;
- height: 900px;
+ height: 100%;
 }
 </style>
