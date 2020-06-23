@@ -26,22 +26,22 @@
     <div style="display:flex;">
       <el-input disabled v-model="dataUser.moneyCurrent" style="margin-right:10px;"></el-input>
     <el-input v-model="moneyCurrentTemp" style="margin-right:10px;"/>
-    <el-button @click="Payload">Confirm</el-button>
+    <el-button @click="Payload" type="primary" plain>Confirm</el-button>
     </div>
   </el-form-item>
   <el-form-item label="Action">
     <div style="display:flex;">
-    <el-button @click="EditUser" icon="el-icon-edit" >Chỉnh sửa</el-button>
-    <el-button v-if="showBtnSave" @click="saveChange" icon="el-icon-success">Lưu</el-button>
-    <el-button @click="dialogDelete = true">Xóa</el-button>
+    <el-button @click="EditUser" icon="el-icon-edit" type="primary" >Chỉnh sửa</el-button>
+    <el-button v-if="showBtnSave" @click="saveChange" icon="el-icon-success" type="success">Lưu</el-button>
+    <el-button @click="dialogDelete = true" type="danger">Xóa</el-button>
     </div>
   </el-form-item>
 </el-form>
-<el-dialog :visible.sync="dialogDelete">
+<el-dialog :visible.sync="dialogDelete" style="width:50%;margin-left:30%;">
   <span>Bạn chắc chắn muốn xóa không?</span>
   <el-form >
-    <el-button @click="Delete">Xóa</el-button>
-    <el-button @click="dialogDelete = false">Hủy</el-button>
+    <el-button @click="Delete" type="danger">Xóa</el-button>
+    <el-button @click="dialogDelete = false" type="info">Hủy</el-button>
   </el-form>
 </el-dialog>
     </div>
@@ -171,8 +171,18 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang='scss' scoped>
 .detailUserStyle {
-    width: 450px;
+    width: 50%;
+    height: auto;
+    font-weight: bolder;
+    justify-items: center;
+    margin-left: 25%;
+    /* background:url(https://raw.githubusercontent.com/khadkamhn/day-01-login-form/master/img/bg.jpg) no-repeat center; */
+	box-shadow:0 12px 15px 0 rgba(0,0,0,.24),0 17px 50px 0 rgba(0,0,0,.19);
+  & .el-input {
+    border-radius: 5px;
+    font-size: 15px;
+  }
 }
 </style>
