@@ -82,7 +82,7 @@
   <span>Total: </span>
   <hr />
   <el-row>
-  <el-col :span="9" v-for="itemImg in dataStock" :key="itemImg.img" >
+  <el-col :span="10" v-for="itemImg in dataStock" :key="itemImg.img" >
     <el-card :body-style="{ padding: '0px' }" class="showFood">
       <img :src="itemImg.img" class="image">
       <div style="padding: 14px;">
@@ -91,6 +91,7 @@
         <div class="bottom clearfix">
           <el-button size="mini" type="primary" class="button" @click="handlePick(itemImg)">Order</el-button>
           <el-button size="mini" type="success" class="buttonLike">{{ itemImg.like + ' '}}+</el-button>
+          <el-button size="mini" type="danger" class="buttonCan">x</el-button>
         </div>
       </div>
     </el-card>
@@ -368,11 +369,24 @@ export default {
   margin-top: 20px;
 }
 .showFood {
-      margin: 2px;
+      margin-left: 5px;
   }
   .image {
     width: 350px;
     display: block;
     height: 150px;
+  }
+    .button {
+    padding: 0;
+    float: right;
+  }
+
+  .buttonLike {
+    padding: 0;
+    float: left;
+  }
+  .buttonCan {
+    padding: 0;
+    float: left;
   }
 </style>
