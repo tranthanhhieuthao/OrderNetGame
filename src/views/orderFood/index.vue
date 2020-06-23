@@ -10,7 +10,7 @@
   <el-col :span="6" v-for="itemImg in listFood" :key="itemImg.img" >
     <el-card :body-style="{ padding: '0px' }" class="showFood">
       <img :src="itemImg.img" class="image">
-      <div style="padding: 14px;">
+      <div style="padding: 14px;font-size:13px;">
         <span>{{ itemImg.name + ':' }}</span>
         <span>{{itemImg.money + 'đ'}}</span>
         <div class="bottom clearfix">
@@ -106,6 +106,12 @@ export default {
       VueCookies.set('orderFoodOfUser', JSON.stringify(this.orderTemp), '2h')
       this.$store.dispatch('app/stockFoodUser', this.orderTemp)
       this.quatityFood = 0
+      this.$notify({
+        title: 'Success',
+        message: 'Thêm vào giỏ hàng thành công',
+        type: 'success',
+        position: 'bottom-right'
+      })
     }
 
   }

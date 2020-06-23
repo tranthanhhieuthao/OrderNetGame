@@ -78,20 +78,20 @@
 </el-menu>
 <el-dialog
   :visible.sync="dialogCart"
-  width="30%">
-  <span>Total: </span>
+  width="50%">
+  <span>Total: {{ total + 'đ'}}</span>
   <hr />
   <el-row>
-  <el-col :span="10" v-for="itemImg in dataStock" :key="itemImg.img" >
+  <el-col :span="12" v-for="itemImg in dataStock" :key="itemImg.img" >
     <el-card :body-style="{ padding: '0px' }" class="showFood">
       <img :src="itemImg.img" class="image">
-      <div style="padding: 14px;">
+      <div style="padding: 10px;font-size:13px;">
         <span>{{ itemImg.name + ':' }}</span>
+        <span>{{ itemImg.quatity + 'x' }}</span>
         <span>{{itemImg.money + 'đ'}}</span>
         <div class="bottom clearfix">
-          <el-button size="mini" type="primary" class="button" @click="handlePick(itemImg)">Order</el-button>
           <el-button size="mini" type="success" class="buttonLike">{{ itemImg.like + ' '}}+</el-button>
-          <el-button size="mini" type="danger" class="buttonCan" @click="removeStockFood(itemImg.idFood)">x</el-button>
+          <el-button size="mini" type="danger" class="buttonCan" @click="removeStockFood(itemImg.idFood)">XRemove</el-button>
         </div>
       </div>
     </el-card>
@@ -128,13 +128,18 @@ export default {
       },
       dialogCart: false,
       stock: 0,
-      dataStock: []
+      dataStock: [],
+      total: 0
     }
   },
   created() {
     this.id = VueCookies.get('username')
     this.stock = JSON.parse(VueCookies.get('orderFoodOfUser')).length
-    this.dataStock = JSON.parse(VueCookies.get('orderFoodOfUser'))
+    // this.dataStock = JSON.parse(VueCookies.get('orderFoodOfUser'))
+    this.$store.dispatch('app/stockFoodUser', JSON.parse(VueCookies.get('orderFoodOfUser')))
+    this.dataStock.forEach(e => {
+      this.total += e.quatity * e.money
+    })
     this.getData()
   },
   watch: {
@@ -158,9 +163,13 @@ export default {
       if (this.stockFood.length !== 0) {
         this.stock = JSON.parse(VueCookies.get('orderFoodOfUser')).length
         this.dataStock = JSON.parse(VueCookies.get('orderFoodOfUser'))
+        this.dataStock.forEach(e => {
+          this.total += e.quatity * e.money
+        })
       } else {
         this.stock = 0
         this.dataStock = []
+        this.total = 0
       }
     }
   },
@@ -213,14 +222,11 @@ export default {
       return false
     },
     removeStockFood(id) {
-      console.log(id)
-      // this.stockFood = [...JSON.parse(VueCookies.get('orderFoodOfUser'))]
       var temp = this.stockFood.filter(e => {
-        e.idFood !== id
+        return e.idFood !== id
       })
-      this.stockFood = temp
-      console.log(temp)
-      VueCookies.set('orderFoodOfUser', JSON.stringify(this.stockFood))
+      this.$store.dispatch('app/stockFoodUser', temp)
+      VueCookies.set('orderFoodOfUser', JSON.stringify(temp), '2h')
     },
     convertTimeRemain() {
       var timeUse = setTimeout(() => {
@@ -386,10 +392,6 @@ export default {
     display: block;
     height: 150px;
   }
-    .button {
-    padding: 0;
-    float: right;
-  }
 
   .buttonLike {
     padding: 0;
@@ -397,6 +399,6 @@ export default {
   }
   .buttonCan {
     padding: 0;
-    float: left;
+    float: right;
   }
 </style>
