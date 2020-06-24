@@ -119,7 +119,7 @@ export default {
           this.$store.dispatch('app/dataUserCurrent', e.data())
           VueCookies.set('username', e.id, '2h')
           this.$store.dispatch('app/usernameReload', VueCookies.get('username'))
-          this.$router.replace('/detail/' + VueCookies.get('username'))
+          this.$router.replace('/listPc')
         })
         this.$notify({
           title: 'Success',

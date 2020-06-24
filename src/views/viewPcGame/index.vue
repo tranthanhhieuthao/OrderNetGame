@@ -29,8 +29,8 @@
   </el-menu>
   </div>
   <div v-if="typeGridOrList">
-        <el-row >
-  <el-col :span="8" v-for="item of listPc" :key="item.id">
+        <el-row>
+  <el-col :span="6" v-for="item of listPc" :key="item.id">
         <el-card :body-style="{ padding: '1px' }" shadow="hover" class="showPC">
       <img :src="item.img" class="image">
       <div style="padding: 5px;">
@@ -49,7 +49,7 @@
      <el-table
     :data="listPc"
     style="width: 100%"
-    max-height="250">
+    max-height="320">
      <el-table-column
       fixed
       prop="namePc"
@@ -250,7 +250,7 @@ export default {
 
 <style lang="scss" scoped>
 .image {
-    width: 450px;
+    width: 300px;
 }
 .showPC {
     margin: 10px;
