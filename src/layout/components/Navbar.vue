@@ -38,7 +38,7 @@
          <a>Chi tiết</a>
           </router-link>
       </el-menu-item>
-      <el-menu-item class="food-sub" style="margin-right:30px;">
+      <el-menu-item index="4" class="food-sub" style="margin-right:30px;">
         <router-link to="/food">
          <a>Đồ ăn</a>
           </router-link>
@@ -147,7 +147,9 @@ export default {
   },
   created() {
     this.id = VueCookies.get('username')
-    this.stock = JSON.parse(VueCookies.get('orderFoodOfUser')).length
+    if (VueCookies.get('orderFoodOfUser') !== null) {
+      this.stock = JSON.parse(VueCookies.get('orderFoodOfUser')).length
+    } else this.stock = 0
     // this.dataStock = JSON.parse(VueCookies.get('orderFoodOfUser'))
     this.$store.dispatch('app/stockFoodUser', JSON.parse(VueCookies.get('orderFoodOfUser')))
     this.dataStock.forEach(e => {
@@ -424,7 +426,7 @@ export default {
    float: left;
   color: #f2f2f2;
   text-align: center;
-  text-decoration: none;
+  text-decoration: none !important;
   font-size: 17px;
 }
 .el-icon-shopping-cart-1 {
