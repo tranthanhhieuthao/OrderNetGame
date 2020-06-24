@@ -37,8 +37,8 @@ export default {
 
 <style scoped>
 .mainStyle {
- background-image: url('https://thietbiketnoi.com/wp-content/uploads/2020/01/tong-hop-hinh-nen-background-vector-designer-dep-do-phan-giai-fhd-2k-4k-moi-nhat-3-scaled.jpg');
- background-repeat: no-repeat;
+ background-image: url('https://ngockhangit93com.files.wordpress.com/2016/02/131120hinh-nen-nhung-hoa-tiet-trang-tri-mau-xanh-den-danh-cho-wesite.jpg');
+ /* background-repeat: no-repeat; */
  height: 100%;
 }
 </style>
