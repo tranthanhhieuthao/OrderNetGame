@@ -84,14 +84,14 @@
         <el-button
           v-if="!scope.row.status"
           @click="OderPc(scope.row.namePc)"
-          type="text"
+          type="success"
           size="small">
           Đặt chỗ
         </el-button>
         <el-button
           v-else
           @click="cancellOderPc(scope.row.namePc)"
-          type="text"
+          type="warning"
           size="small">
           Hủy
         </el-button>
