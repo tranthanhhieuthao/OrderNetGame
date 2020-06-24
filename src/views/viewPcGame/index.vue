@@ -48,7 +48,7 @@
     <div v-else>
      <el-table
     :data="listPc"
-    style="width: 100%"
+    style="width: 100%;"
     max-height="320">
      <el-table-column
       fixed
