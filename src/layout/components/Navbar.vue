@@ -9,7 +9,7 @@
   active-text-color="#ffd04b">
   <el-menu-item />
     <el-menu-item style="float:right;">
-      <el-dropdown split-button type="primary" >
+      <el-dropdown split-button type="info" plain >
         {{usernameReload}}
   <el-dropdown-menu slot="dropdown">
     <el-dropdown-item>

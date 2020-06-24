@@ -5,6 +5,30 @@
       <img :src="item.img" width="auto;"/>
     </el-carousel-item>
   </el-carousel>
+  <div class="navbarGame">
+  <el-menu class="el-menu-demo" mode="horizontal">
+  <el-menu-item style="background : rgba(0,0,0,0);">
+    <el-input placeholder="Nhập từ khóa tìm kiếm" v-model="select" class="input-with-select">
+    <el-button slot="append" icon="el-icon-search"></el-button>
+  </el-input>
+  </el-menu-item>
+  <el-menu-item  style="background : rgba(0,0,0,0);">
+      <el-select v-model="value"  clearable placeholder="Trạng thái">
+    <el-option
+      v-for="item in options"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value">
+    </el-option>
+  </el-select>
+  </el-menu-item>
+  <el-menu-item style="background : rgba(0,0,0,0);">
+    <el-tooltip content="LIST" placement="top"><i class="el-icon-s-grid" @click="typeGridOrList = false" /></el-tooltip>
+    <el-tooltip content="GRID" placement="top"><i class="el-icon-menu" @click="typeGridOrList = true" /></el-tooltip>
+  </el-menu-item>
+  </el-menu>
+  </div>
+  <div v-if="typeGridOrList">
         <el-row >
   <el-col :span="8" v-for="item of listPc" :key="item.id">
         <el-card :body-style="{ padding: '1px' }" shadow="hover" class="showPC">
@@ -20,6 +44,61 @@
     </el-card>
   </el-col>
         </el-row>
+  </div>
+    <div v-else>
+     <el-table
+    :data="listPc"
+    style="width: 100%"
+    max-height="250">
+     <el-table-column
+      fixed
+      prop="namePc"
+      label="Name"
+      min-width="150" />
+      <el-table-column
+      fixed
+      prop="statusConvert"
+      label="Status"
+      min-width="150" />
+      <el-table-column
+      prop="type"
+      label="Type"
+      min-width="150" />
+      <el-table-column
+      prop="Chip"
+      label="Chip"
+      min-width="150" />
+      <el-table-column
+      prop="Ram"
+      label="Ram"
+      min-width="150" />
+      <el-table-column
+      prop="Win"
+      label="Win"
+      width="150" />
+    <el-table-column
+      fixed="right"
+      label="Action"
+      width="120">
+      <template slot-scope="scope">
+        <el-button
+          v-if="!scope.row.status"
+          @click="OderPc(scope.row.namePc)"
+          type="text"
+          size="small">
+          Đặt chỗ
+        </el-button>
+        <el-button
+          v-else
+          @click="cancellOderPc(scope.row.namePc)"
+          type="text"
+          size="small">
+          Hủy
+        </el-button>
+      </template>
+    </el-table-column>
+     </el-table>
+    </div>
     </div>
 </template>
 
@@ -34,7 +113,20 @@ export default {
       order: true,
       resData: null,
       listDiscount: [],
-      resDataDiscount: null
+      resDataDiscount: null,
+      select: '',
+      typeGridOrList: true,
+      options: [
+        {
+          label: 'Đang tắt',
+          value: false
+        },
+        {
+          label: 'Đang hoạt động',
+          value: true
+        }
+      ],
+      value: ''
     }
   },
   mounted() {
@@ -44,13 +136,19 @@ export default {
   watch: {
     resData() {
       this.changeList()
+    },
+    value() {
+      this.changeList()
+    },
+    select() {
+      this.changeList()
     }
   },
   methods: {
     getListPc() {
       this.listPc = []
-      var db = firebase.firestore()
-      db.collection('Computer').onSnapshot(res => {
+      var computerDoc = firebase.firestore().collection('Computer')
+      computerDoc.onSnapshot(res => {
         this.resData = res
         this.changeList()
       })
@@ -72,6 +170,17 @@ export default {
       var temp = []
       this.resData.forEach(e => temp.push(e.data()))
       this.listPc = temp
+      if (this.value !== '' || this.select !== '') {
+        this.listPc = this.listPc.filter(e => {
+          if (this.value !== '' && this.select !== '') {
+            return e.status === this.value && e.namePc.toUpperCase().includes(this.select.toUpperCase())
+          } else if (this.value !== '' && this.select === '') {
+            return e.status === this.value
+          } else if (this.value === '' && this.select !== '') {
+            return e.namePc.toUpperCase().includes(this.select.toUpperCase())
+          }
+        })
+      }
       this.listPc.forEach(e => {
         if (e.status) e.statusConvert = 'Đang hoạt động'
         else e.statusConvert = 'Đang tắt'
@@ -139,7 +248,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .image {
     width: 450px;
 }
@@ -164,5 +273,16 @@ export default {
   }
   .button {
     float: right;
+  }
+  .el-menu-demo {
+    background : rgba(0,0,0,0);
+  }
+  .el-icon-s-grid {
+    margin-left: 10px;
+    font-size: 2.40em;
+  }
+  .el-icon-menu {
+    font-size: 2.40em;
+    margin-left: 10px;
   }
 </style>
