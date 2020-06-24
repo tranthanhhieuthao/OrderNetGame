@@ -112,7 +112,7 @@ export default {
         this.$notify({
           title: 'Success',
           message: 'Update success',
-          type: 'success',
+          type: 'Cập nhật thành công',
           position: 'bottom-right'
         })
       } catch (er) {
@@ -129,7 +129,7 @@ export default {
         })
         this.$notify({
           title: 'Success',
-          message: 'Delete success',
+          message: 'Xóa thành công',
           type: 'success',
           position: 'bottom-right'
         })

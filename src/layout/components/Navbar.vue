@@ -111,8 +111,8 @@
   </el-col>
 </el-row>
   <span slot="footer" class="dialog-footer">
-    <el-button size="mini" @click="dialogCart = false">Cancel</el-button>
-    <el-button size="mini" type="primary" @click="dialogCart = false">Confirm</el-button>
+    <el-button size="mini" @click="dialogCart = false">Hủy</el-button>
+    <el-button size="mini" type="primary" @click="confirmOrderFood">Xác nhận</el-button>
   </span>
 </el-dialog>
     </div>
@@ -209,6 +209,40 @@ export default {
     },
     clearCookie(name) {
       VueCookies.set(name.trim() + '', '', '0s')
+    },
+    confirmOrderFood() {
+      var db = firebase.firestore()
+      var sfDocRef = db.collection('User').doc(VueCookies.get('username'))
+      if (this.dataUser.moneyForFood - this.total < 0) {
+        this.$notify({
+          title: 'Warning',
+          message: 'Số tiền trong tài khoản không đủ, vui lòng bớt sản phẩm trong giỏ',
+          type: 'warning',
+          position: 'bottom-right'
+        })
+      } else {
+        db.runTransaction(transaction => {
+          return transaction.get(sfDocRef).then(sfDoc => {
+            if (!sfDoc.exists) {
+              console.log('Document nt exist!')
+            }
+            const newRemainMoney = this.dataUser.moneyForFood - this.total
+            transaction.update(sfDocRef, { moneyForFood: newRemainMoney })
+            this.dialogCart = false
+          })
+        }).then(() => {
+          this.$notify({
+            title: 'Success',
+            message: 'Đặt hàng thành công',
+            type: 'success',
+            position: 'bottom-right'
+          })
+          this.$store.dispatch('app/stockFoodUser', [])
+          VueCookies.set('orderFoodOfUser', '', '2h')
+        }).catch((error) => {
+          console.log('Transaction failed: ', error)
+        })
+      }
     },
     saveDataTimeRemain() {
       var db = firebase.firestore()

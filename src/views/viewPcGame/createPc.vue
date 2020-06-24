@@ -44,7 +44,7 @@ export default {
         Chip: '',
         Win: '',
         type: '',
-        img: '',
+        img: 'https://maytinhgiakhanh.vn/wp-content/uploads/2019/11/IMG_2318-500x333.jpg',
         status: false
       }
     }
@@ -56,7 +56,7 @@ export default {
         .then(() => {
           this.$notify({
             title: 'Success',
-            message: 'Register success',
+            message: 'Đăng kí máy thành công',
             type: 'success',
             position: 'bottom-right'
           })

@@ -26,14 +26,14 @@
   :visible.sync="dialogOrder"
   width="20%"
  >
-  <span>Confirm quatity your food picked</span>
+  <span>Số lượng</span>
   <hr />
   <el-form>
       <el-input type="number"  style="width:150px;" v-model="quatityFood" />
   </el-form>
   <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogOrder = false">Cancel</el-button>
-    <el-button type="primary" @click="oderFood">Confirm</el-button>
+    <el-button @click="dialogOrder = false">Hủy</el-button>
+    <el-button type="primary" @click="oderFood">Xác nhận</el-button>
   </span>
 </el-dialog>
 </div>
@@ -102,7 +102,6 @@ export default {
         this.orderTemp = [...JSON.parse(VueCookies.get('orderFoodOfUser'))]
       }
       this.orderTemp.push(this.saveDataFoodCookie)
-      console.log(this.orderTemp)
       VueCookies.set('orderFoodOfUser', JSON.stringify(this.orderTemp), '2h')
       this.$store.dispatch('app/stockFoodUser', this.orderTemp)
       this.quatityFood = 0

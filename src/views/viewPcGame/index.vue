@@ -1,15 +1,20 @@
 <template>
     <div>
+      <el-carousel :interval="4000" type="card" height="400px">
+    <el-carousel-item v-for="item in listDiscount" :key="item">
+      <img :src="item.img" width="auto;"/>
+    </el-carousel-item>
+  </el-carousel>
         <el-row >
   <el-col :span="8" v-for="item of listPc" :key="item.id">
-        <el-card :body-style="{ padding: '0px' }" shadow="hover" class="showPC">
+        <el-card :body-style="{ padding: '1px' }" shadow="hover" class="showPC">
       <img :src="item.img" class="image">
-      <div style="padding: 14px;">
+      <div style="padding: 5px;">
         <span>{{item.namePc}}: </span>
         <span>{{item.statusConvert}}</span>
         <div class="bottom clearfix">
-          <el-button type="text" v-if="!item.status" class="button" @click="OderPc(item.namePc)">Đặt chỗ</el-button>
-          <el-button type="text" v-else class="button" @click="cancellOderPc(item.namePc)">Hủy</el-button>
+          <el-button type="success" v-if="!item.status" class="button" @click="OderPc(item.namePc)">Đặt chỗ</el-button>
+          <el-button type="warning" v-else class="button" @click="cancellOderPc(item.namePc)">Hủy</el-button>
         </div>
       </div>
     </el-card>
@@ -27,11 +32,14 @@ export default {
       listPc: [],
       usernameOder: '',
       order: true,
-      resData: null
+      resData: null,
+      listDiscount: [],
+      resDataDiscount: null
     }
   },
   mounted() {
     this.getListPc()
+    this.getListDiscount()
   },
   watch: {
     resData() {
@@ -46,6 +54,19 @@ export default {
         this.resData = res
         this.changeList()
       })
+    },
+    getListDiscount() {
+      this.listDiscount = []
+      var db = firebase.firestore()
+      db.collection('Discount').onSnapshot(res => {
+        this.resDataDiscount = res
+        this.changeListDiscount()
+      })
+    },
+    changeListDiscount() {
+      var temp = []
+      this.resDataDiscount.forEach(e => temp.push(e.data()))
+      this.listDiscount = temp
     },
     changeList() {
       var temp = []
@@ -64,7 +85,7 @@ export default {
           console.log(VueCookies.get('pcName'))
           this.$notify({
             title: 'warning',
-            message: 'You aldready order, please cancel your pc picked before',
+            message: 'Bạn đã đặt chỗ, vui lòng hủy máy bạn đặt trước đó',
             type: 'warning',
             position: 'bottom-right'
           })
@@ -77,7 +98,7 @@ export default {
           await docpcName.update('status', true)
           this.$notify({
             title: 'Success',
-            message: 'Oder success',
+            message: 'Đặt chỗ thành công',
             type: 'success',
             position: 'bottom-right'
           })
@@ -86,7 +107,7 @@ export default {
         } else {
           this.$notify({
             title: 'chỗ đã được đặt',
-            message: 'Oder fail',
+            message: 'Đặt chỗ lỗi',
             type: 'warning',
             position: 'bottom-right'
           })
@@ -104,7 +125,7 @@ export default {
         await docpcName.update('status', false)
         this.$notify({
           title: 'Success',
-          message: 'Cancel success',
+          message: 'Hủy đặt máy thành công',
           type: 'success',
           position: 'bottom-right'
         })
@@ -121,9 +142,27 @@ export default {
 <style scoped>
 .image {
     width: 450px;
-    height: 300px;
 }
 .showPC {
-    margin: 5px;
+    margin: 10px;
 }
+  .el-carousel__item img {
+    color: #475669;
+    font-size: 14px;
+    opacity: 0.75;
+    margin: 0;
+    width: auto;
+    height: 400px;
+  }
+
+  .el-carousel__item:nth-child(2n) {
+    background-color: #99a9bf;
+  }
+
+  .el-carousel__item:nth-child(2n+1) {
+    background-color: #d3dce6;
+  }
+  .button {
+    float: right;
+  }
 </style>
