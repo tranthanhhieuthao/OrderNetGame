@@ -39,6 +39,6 @@ export default {
 .mainStyle {
  background-image: url('https://ngockhangit93com.files.wordpress.com/2016/02/131120hinh-nen-nhung-hoa-tiet-trang-tri-mau-xanh-den-danh-cho-wesite.jpg');
  /* background-repeat: no-repeat; */
- height: 100%;
+ min-height: 910px;
 }
 </style>

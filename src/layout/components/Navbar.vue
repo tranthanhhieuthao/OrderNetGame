@@ -30,17 +30,17 @@
       </el-menu-item>
      <el-menu-item index="2" class="listpc-sub" style="margin-right:30px;">
         <router-link to="/listPc">
-         <a> List PC</a>
+         <a>Danh sách máy</a>
           </router-link>
       </el-menu-item>
        <el-menu-item index="3" class="setting-sub" style="margin-right:30px;">
         <router-link :to="{path: `/detail`, params: {id: id}}" >
-         <a>Detail</a>
+         <a>Chi tiết</a>
           </router-link>
       </el-menu-item>
       <el-menu-item class="food-sub" style="margin-right:30px;">
         <router-link to="/food">
-         <a>Food</a>
+         <a>Đồ ăn</a>
           </router-link>
       </el-menu-item>
        <el-menu-item style="float:left;" v-if="id === 'admin'">
@@ -51,12 +51,12 @@
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item>
           <router-link to="/createPc">
-          <i class="el-icon-setting"> Create PC</i>
+          <i class="el-icon-setting">Tạo mới</i>
           </router-link>
         </el-dropdown-item>
         <el-dropdown-item>
           <router-link to="/showUser">
-          <i class="el-icon-menu"> List User</i>
+          <i class="el-icon-menu">Danh sách user</i>
           </router-link>
         </el-dropdown-item>
       </el-dropdown-menu>

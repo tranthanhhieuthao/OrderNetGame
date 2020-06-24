@@ -26,7 +26,14 @@
     <div style="display:flex;">
       <el-input disabled v-model="dataUser.moneyCurrent" style="margin-right:10px;"></el-input>
     <el-input v-model="moneyCurrentTemp" style="margin-right:10px;"/>
-    <el-button @click="Payload" type="primary" plain>Confirm</el-button>
+    <el-button @click="Payload" type="primary" plain>Nạp tài khoản</el-button>
+    </div>
+  </el-form-item>
+   <el-form-item label="Money Food">
+    <div style="display:flex;">
+      <el-input disabled v-model="dataUser.moneyForFood" style="margin-right:10px;"></el-input>
+    <el-input v-model="moneyFoodCurrentTemp" style="margin-right:10px;"/>
+    <el-button @click="PayloadFood" type="primary" plain>Nạp tiền</el-button>
     </div>
   </el-form-item>
   <el-form-item label="Action">
@@ -62,6 +69,7 @@ export default {
       count: 0,
       timeRemainData: '',
       moneyCurrentTemp: 0,
+      moneyFoodCurrentTemp: 0,
       dialogDelete: false,
       showBtnSave: false,
       disableEdit: true
@@ -166,6 +174,11 @@ export default {
           position: 'bottom-right'
         })
       }
+    },
+    PayloadFood() {
+      this.dataUser.moneyForFood += parseInt(this.moneyFoodCurrentTemp)
+      this.moneyFoodCurrentTemp = 0
+      this.saveChange()
     }
   }
 }
