@@ -1,13 +1,13 @@
 <template>
 <div class="contain">
-        <el-carousel :interval="4000" type="card" height="400px">
+        <el-carousel :interval="4000" type="card" class="carouselDesktop" >
     <el-carousel-item v-for="itemImg in foodPopular" :key="itemImg.img">
-      <img :src="itemImg.img" width="800px;"/>
+      <img :src="itemImg.img" class="imgDesktop" />
     </el-carousel-item>
   </el-carousel>
 <div>
     <el-row>
-  <el-col :span="6" v-for="itemImg in listFood" :key="itemImg.img" >
+  <el-col :span="6" class="sixDisplay" v-for="itemImg in listFood" :key="itemImg.img" >
     <el-card :body-style="{ padding: '0px' }" class="showFood">
       <img :src="itemImg.img" class="image">
       <div style="padding: 14px;font-size:13px;">
@@ -16,6 +16,19 @@
         <div class="bottom clearfix">
           <el-button type="primary" class="button" @click="handlePick(itemImg)">Order</el-button>
           <el-button type="success" class="buttonLike">{{ itemImg.like + ' '}}+</el-button>
+        </div>
+      </div>
+    </el-card>
+  </el-col>
+  <el-col :span="12" class="eightDisplay" v-for="itemImg in listFood" :key="itemImg.id" >
+    <el-card :body-style="{ padding: '0px' }" class="showFood">
+      <img :src="itemImg.img" class="imageMobile">
+      <div style="padding: 5px;font-size:8px;">
+        <span>{{ itemImg.name + ':' }}</span>
+        <span>{{itemImg.money + 'đ'}}</span>
+        <div class="bottom clearfix">
+          <el-button type="primary" size="mini" class="buttonMobile" @click="handlePick(itemImg)">Order</el-button>
+          <el-button type="success" size="mini" class="buttonLikeMobile">{{ itemImg.like + ' '}}+</el-button>
         </div>
       </div>
     </el-card>
@@ -117,7 +130,8 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+ @media only screen and (min-width: 965px) {
   .el-carousel__item img {
     color: #475669;
     font-size: 14px;
@@ -162,4 +176,38 @@ export default {
       display: flex;
       justify-content: center;
   }
+  .eightDisplay {
+        display: none;
+      }
+  .imgDesktop {
+    width:800px ;
+  }
+  .carouselDesktop {
+   height: 400px;
+  }
+ }
+@media only screen and (max-width: 965px) {
+  .sixDisplay {
+    display: none;
+  }
+  .imageMobile {
+     width: 150px;
+     display: block;
+     height: 100px;
+  }
+  .imgDesktop {
+    width:620px ;
+  }
+  .carouselDesktop {
+    height: 400px;
+  }
+  .buttonMobile {
+    padding: 0;
+    float: right;
+  }
+  .buttonLikeMobile {
+    padding: 0;
+    float: left;
+  }
+    }
 </style>

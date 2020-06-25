@@ -1,5 +1,5 @@
 <template>
-    <div class="mainStyle">
+    <div :class="classObj" class="mainStyle">
         <el-row :gutter="24">
           <el-col :span="20" :offset="2">
             <div>
@@ -18,7 +18,7 @@
 <script>
 import Navbar from '@/layout/components/Navbar'
 import app from '@/App'
-import ResizeMixin from '@/layout/mixin/ResizeHandler'
+// import ResizeMixin from '@/layout/mixin/ResizeHandler'
 import { mapState } from 'vuex'
 
 export default {
@@ -26,11 +26,16 @@ export default {
     Navbar,
     app
   },
-  mixins: [ResizeMixin],
+  // mixins: [ResizeMixin],
   computed: {
     ...mapState({
       device: state => state.app.device
-    })
+    }),
+    classObj() {
+      return {
+        mobile: this.device === 'mobile'
+      }
+    }
   }
 }
 </script>

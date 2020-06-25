@@ -9,10 +9,25 @@ export default {
     console.log(isMobile)
     console.log(store.state.app.device)
     if (isMobile) {
-      console.log('chay vao day')
       store.dispatch('app/toggleDevice', 'mobile')
     } else store.dispatch('app/toggleDevice', 'desktop')
   },
+  // watch: {
+  //   widthChange() {
+  //     console.log('chay vao day la dung')
+  //     const isMobile = this.$_isMobile()
+  //     if (isMobile) {
+  //       store.dispatch('app/toggleDevice', 'mobile')
+  //     } else store.dispatch('app/toggleDevice', 'desktop')
+  //   }
+  // },
+  // computed: {
+  //   widthChange: {
+  //     get() {
+  //       return body.getBoundingClientRect().width
+  //     }
+  //   }
+  // },
   methods: {
     // use $_ for mixins properties
     // https://vuejs.org/v2/style-guide/index.html#Private-property-names-essential

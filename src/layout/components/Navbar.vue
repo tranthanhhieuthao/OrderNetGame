@@ -7,40 +7,48 @@
   text-color="#fff"
   key="menuKey"
   active-text-color="#ffd04b">
-  <el-menu-item />
-    <el-menu-item style="float:right;">
-      <el-dropdown split-button type="info" plain >
+      <el-dropdown class="dropUser" size="small" split-button type="info" plain >
         {{usernameReload}}
-  <el-dropdown-menu slot="dropdown">
+  <el-dropdown-menu class="dropUserMenu" slot="dropdown">
     <el-dropdown-item>
      <router-link to="/">
-     <i class="el-icon-user-solid"> Login</i>
+     <i class="el-icon-user-solid">Login</i>
       </router-link>
     </el-dropdown-item>
     <el-dropdown-item >
       <i class="el-icon-remove-outline" @click="logout">Logout</i>
     </el-dropdown-item>
+      <el-dropdown-item>
+        <router-link :to="{path: `/detail`, params: {id: id}}" >
+         <a>Chi tiết</a>
+          </router-link>
+      </el-dropdown-item>
   </el-dropdown-menu>
 </el-dropdown>
-    </el-menu-item>
     <el-menu-item  class="listpc-sub" style="margin-right:30px;float:right;">
       <el-badge v-model="stock" class="item" type="primary" >
-         <a class="el-icon-shopping-cart-1" @click="dialogCart = true"> Cart</a>
+         <a class="el-icon-shopping-cart-1" @click="dialogCart = true">Cart</a>
       </el-badge>
+       <i class="el-icon-shopping-cart-2" @click="dialogCart = true" />
       </el-menu-item>
      <el-menu-item index="2" class="listpc-sub" style="margin-right:30px;">
         <router-link to="/listPc">
-         <a>Danh sách máy</a>
-          </router-link>
-      </el-menu-item>
-       <el-menu-item index="3" class="setting-sub" style="margin-right:30px;">
-        <router-link :to="{path: `/detail`, params: {id: id}}" >
-         <a>Chi tiết</a>
+         <a class="textPc">Danh sách máy</a>
+         <i class="el-icon-s-platform" />
           </router-link>
       </el-menu-item>
       <el-menu-item index="4" class="food-sub" style="margin-right:30px;">
         <router-link to="/food">
-         <a>Đồ ăn</a>
+         <a class="textFood">Đồ ăn</a>
+         <i class="el-icon-food" />
+          </router-link>
+      </el-menu-item>
+      <el-menu-item index="5" class="LogoutMobile" style="margin-right:30px;">
+         <i class="el-icon-remove-outline" @click="logout" />
+      </el-menu-item>
+      <el-menu-item index="4" class="detailMobile" style="margin-right:30px;">
+        <router-link :to="{path: `/detail`, params: {id: id}}" >
+         <i class="el-icon-user-solid" />
           </router-link>
       </el-menu-item>
        <el-menu-item style="float:left;" v-if="id === 'admin'">
@@ -62,7 +70,7 @@
       </el-dropdown-menu>
        </el-dropdown>
     </el-menu-item>
-    <el-menu-item >
+    <el-menu-item class="clock">
       <div id="clockdiv">
   <div>
     <span class="hours" id="hour">{{ dataUser.timeRemain }}</span>
@@ -192,7 +200,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['usernameReload', 'dataUserCurrent', 'timeUseService', 'stockFood']),
+    ...mapGetters(['usernameReload', 'dataUserCurrent', 'timeUseService', 'stockFood', 'device']),
     second: {
       get() {
         return this.dataUser.second
@@ -384,6 +392,7 @@ export default {
 </script>
 
 <style scoped>
+@media only screen and (min-width: 965px) {
  #clockdiv{
     font-family: sans-serif;
     color: rgb(20, 20, 20);
@@ -424,11 +433,11 @@ export default {
   text-decoration: none;
   font-size: 17px;
 }
-.food-sub {
+.food-sub a{
    float: left;
-  color: #f2f2f2;
   text-align: center;
-  text-decoration: none !important;
+  text-decoration: none ;
+  color: #FFFFFF;
   font-size: 17px;
 }
 .el-icon-shopping-cart-1 {
@@ -437,20 +446,109 @@ export default {
   margin-top: 20px;
 }
 .showFood {
-      margin-left: 5px;
-  }
-  .image {
-    width: 350px;
-    display: block;
-    height: 150px;
-  }
-
-  .buttonLike {
+  margin-left: 5px;
+}
+.image {
+  width: 350px;
+  display: block;
+  height: 150px;
+}
+.buttonLike {
+  padding: 0;
+  float: left;
+}
+.buttonCan {
+  padding: 0;
+  float: right;
+}
+.el-icon-s-platform {
+  display: none;
+}
+.el-icon-food {
+  display: none;
+}
+.el-icon-shopping-cart-2 {
+  display: none;
+}
+.LogoutMobile {
+  display: none;
+}
+.detailMobile {
+  display: none;
+}
+.dropUser {
+  float: right;
+  margin-top:15px;
+  margin-right:15px;
+}
+}
+@media only screen and (max-width: 965px) {
+  /* For mobile phones: */
+.el-menu.el-menu--horizontal {
+    display: flex;
+    width: auto;
+}
+.textPc {
+  display: none;
+}
+.textFood {
+  display: none;
+}
+.buttonLike {
     padding: 0;
     float: left;
   }
-  .buttonCan {
+.buttonCan {
     padding: 0;
-    float: right;
+    float: left;
   }
+.el-menu-demo {
+    width: 300px;
+    display: flex;
+  }
+.el-icon-shopping-cart-1 {
+  display: flex;
+  justify-content: center;
+  margin-top: 2px;
+}
+.listpc-sub {
+  margin-left: 1px;
+  padding: 0px;
+}
+.food-sub {
+  margin-left: 1px;
+  padding: 0px;
+}
+.dropUser {
+  display: none;
+}
+.dropUserMenu {
+  display: none;
+}
+.clock {
+  display: none;
+}
+.el-icon-shopping-cart-1 {
+  display: none;
+}
+.item {
+  display: none;
+}
+.LogoutMobile {
+  padding: 0px;
+  margin-left:1px;
+}
+.detailMobile {
+  padding: 0px;
+  margin-left:1px;
+}
+.element.style {
+  display: none;
+}
+.el-menu--horizontal {
+    outline: 0;
+    color: #303133;
+    display: none;
+}
+}
 </style>

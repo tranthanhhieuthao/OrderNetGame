@@ -30,7 +30,7 @@
   </div>
   <div v-if="typeGridOrList">
         <el-row>
-  <el-col :span="6" v-for="item of listPc" :key="item.id">
+  <el-col class="displayDestop" :span="6" v-for="item of listPc" :key="item.id">
         <el-card :body-style="{ padding: '1px' }" shadow="hover" class="showPC">
       <img :src="item.img" class="image">
       <div style="padding: 5px;">
@@ -43,6 +43,19 @@
       </div>
     </el-card>
   </el-col>
+    <el-col class="displayMobile" :span="12" v-for="item of listPc" :key="item.id">
+        <el-card :body-style="{ padding: '1px' }" shadow="hover" class="showPC">
+      <img :src="item.img" class="imageMobile">
+      <div style="padding: 1px;font-size:9px;">
+        <span>{{item.namePc}}: </span>
+        <span>{{item.statusConvert}}</span>
+        <div class="bottom clearfix">
+          <el-button type="success" size="mini" v-if="!item.status" class="button" @click="OderPc(item.namePc)">Đặt chỗ</el-button>
+          <el-button type="warning" size="mini" v-else class="button" @click="cancellOderPc(item.namePc)">Hủy</el-button>
+        </div>
+      </div>
+    </el-card>
+  </el-col>
         </el-row>
   </div>
     <div v-else>
@@ -51,12 +64,10 @@
     style="width: 100%;"
     max-height="320">
      <el-table-column
-      fixed
       prop="namePc"
       label="Name"
       min-width="150" />
       <el-table-column
-      fixed
       prop="statusConvert"
       label="Status"
       min-width="150" />
@@ -249,6 +260,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@media only screen and (min-width: 965px) {
 .image {
     width: 300px;
 }
@@ -284,5 +296,33 @@ export default {
   .el-icon-menu {
     font-size: 2.40em;
     margin-left: 10px;
+  }
+  .displayMobile {
+    display: none;
+  }
+}
+  @media only screen and (max-width: 965px) {
+    .displayDestop {
+    display: none;
+  }
+  .el-menu-demo {
+    background : rgba(0,0,0,0);
+  }
+   .el-icon-s-grid {
+    margin-left: 10px;
+    font-size: 1.40em;
+  }
+  .el-icon-menu {
+    font-size: 1.40em;
+    margin-left: 10px;
+  }
+  .imageMobile {
+    width: 200px;
+}
+.button {
+    float: right;
+    width: auto;
+    height: 25px;
+  }
   }
 </style>

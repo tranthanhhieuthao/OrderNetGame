@@ -139,7 +139,7 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
 body{
 	margin:0;
 	color:#6a6f8c;
@@ -288,5 +288,31 @@ a{color:inherit;text-decoration:none}
 }
 .foot-lnk{
 	text-align:center;
+}
+  @media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+ .login-html{
+	width:100%;
+	height:100%;
+	// position:absolute;
+	padding:60px 40px 20px 40px;
+	background:rgba(40,57,101,.9);
+}
+.login-form{
+	min-height:345px;
+	// position:relative;
+	perspective:1000px;
+	transform-style:preserve-3d;
+}
+.login-wrap{
+	width:100%;
+	min-height: 600px;
+	margin:10px;
+	max-width:375px;
+	// min-height:570px;
+	position:relative;
+	background:url(https://raw.githubusercontent.com/khadkamhn/day-01-login-form/master/img/bg.jpg) no-repeat center;
+	box-shadow:0 12px 15px 0 rgba(0,0,0,.24),0 17px 50px 0 rgba(0,0,0,.19);
+}
 }
 </style>
