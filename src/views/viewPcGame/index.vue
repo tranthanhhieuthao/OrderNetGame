@@ -37,7 +37,7 @@
         <span>{{item.namePc}}: </span>
         <span>{{item.statusConvert}}</span>
         <div class="bottom clearfix">
-          <el-button type="success" v-if="!item.status" class="button" @click="OderPc(item.namePc)">Đặt chỗ</el-button>
+          <el-button type="success" v-if="!item.status && !checkDisable()" class="button" @click="OderPc(item.namePc)">Đặt chỗ</el-button>
           <el-button type="warning" v-if="item.status && checkDisable()" class="button" @click="cancellOderPc(item.namePc)">Hủy</el-button>
           <el-button type="warning" v-if="item.status && !checkDisable()">Có người dùng</el-button>
         </div>
@@ -149,7 +149,8 @@ export default {
   watch: {
     resData() {
       this.changeList()
-      this.checkDisable()
+      var a = this.checkDisable()
+      console.log(a)
     },
     value() {
       this.changeList()
@@ -196,18 +197,18 @@ export default {
         })
       }
       this.listPc.forEach(e => {
-        if (this.checkDisable()) e.statusConvert = 'Máy đang có người khác sử dụng'
-        else if (e.status) e.statusConvert = 'Đang hoạt động'
-        else e.statusConvert = 'Đang tắt'
+        if (!this.checkDisable() && e.status) e.statusConvert = 'Máy đang có người khác sử dụng'
+        else if (e.status && this.checkDisable()) e.statusConvert = 'Đang hoạt động'
+        else if (!e.status && !this.checkDisable()) e.statusConvert = 'Đang tắt'
       })
     },
-    async checkDisable() {
-      const db = firebase.firestore()
-      const docpcName = await db.collection('Computer').doc(VueCookies.get('pcName'))
-      await docpcName.onSnapshot(res => {
-        if (res.data().nameUse.indexOf(VueCookies.get('username')) > 0) return true
+    checkDisable() {
+      if (VueCookies.get('pcName') === null) return false
+      var namePcCurrent = this.listPc.find(e => {
+        return e.namePc.includes(VueCookies.get('pcName'))
       })
-      return false
+      if (namePcCurrent.nameUse.includes(VueCookies.get('username'))) return true
+      else return false
     },
     async OderPc(pcName) {
       try {
