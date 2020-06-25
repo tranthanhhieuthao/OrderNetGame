@@ -38,8 +38,8 @@
         <span>{{item.statusConvert}}</span>
         <div class="bottom clearfix">
           <el-button type="success" v-if="!item.status" class="button" @click="OderPc(item.namePc)">Đặt chỗ</el-button>
-          <el-button type="warning" v-if="item.status && checkDisable()" class="button" @click="cancellOderPc(item.namePc)">Hủy</el-button>
-          <el-button type="warning" v-if="item.status && !checkDisable()" class="button">Có người đã dùng</el-button>
+          <el-button type="warning" v-if="item.status && item.disable" class="button" @click="cancellOderPc(item.namePc)">Hủy</el-button>
+          <el-button type="warning" v-if="item.status && !item.disable" class="button">Có người đã dùng</el-button>
         </div>
       </div>
     </el-card>
@@ -196,8 +196,8 @@ export default {
       }
       this.listPc.forEach(e => {
         if (!e.status) e.statusConvert = 'Đang tắt'
-        else if (e.status && this.checkDisable()) e.statusConvert = 'Đang hoạt động'
-        else if (e.status && !this.checkDisable()) e.statusConvert = 'Có người khác sử dụng'
+        else if (e.status && e.disable) e.statusConvert = 'Đang hoạt động'
+        else if (e.status && !e.disable) e.statusConvert = 'Có người khác sử dụng'
       })
     },
     checkDisable() {
@@ -228,7 +228,12 @@ export default {
           await db.collection('User').doc(VueCookies.get('username')).update('pcName', pcName)
           await docpcName.update('status', true)
           await docpcName.update('nameUse', VueCookies.get('username'))
-          await docpcName.update('disable', true)
+          var namePcCurrent = this.listPc.find(e => {
+            return e.namePc.includes(VueCookies.get('pcName'))
+          })
+          if (namePcCurrent.nameUse.includes(VueCookies.get('username'))) {
+            await docpcName.update('disable', true)
+          } else await docpcName.update('disable', false)
           this.$notify({
             title: 'Success',
             message: 'Đặt chỗ thành công',
