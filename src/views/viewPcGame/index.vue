@@ -37,9 +37,9 @@
         <span>{{item.namePc}}: </span>
         <span>{{item.statusConvert}}</span>
         <div class="bottom clearfix">
-          <el-button type="success" v-if="!item.status && !checkDisable()" class="button" @click="OderPc(item.namePc)">Đặt chỗ</el-button>
+          <el-button type="success" v-if="!item.status" class="button" @click="OderPc(item.namePc)">Đặt chỗ</el-button>
           <el-button type="warning" v-if="item.status && checkDisable()" class="button" @click="cancellOderPc(item.namePc)">Hủy</el-button>
-          <el-button type="warning" v-if="item.status && !checkDisable()">Có người dùng</el-button>
+          <el-button type="warning" v-if="item.status && !checkDisable()" class="button">Có người đã dùng</el-button>
         </div>
       </div>
     </el-card>
@@ -149,8 +149,6 @@ export default {
   watch: {
     resData() {
       this.changeList()
-      var a = this.checkDisable()
-      console.log(a)
     },
     value() {
       this.changeList()
@@ -197,9 +195,9 @@ export default {
         })
       }
       this.listPc.forEach(e => {
-        if (!this.checkDisable() && e.status) e.statusConvert = 'Máy đang có người khác sử dụng'
+        if (!e.status) e.statusConvert = 'Đang tắt'
         else if (e.status && this.checkDisable()) e.statusConvert = 'Đang hoạt động'
-        else if (!e.status && !this.checkDisable()) e.statusConvert = 'Đang tắt'
+        else if (e.status && !this.checkDisable()) e.statusConvert = 'Có người khác sử dụng'
       })
     },
     checkDisable() {
