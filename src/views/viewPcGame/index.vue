@@ -38,7 +38,8 @@
         <span>{{item.statusConvert}}</span>
         <div class="bottom clearfix">
           <el-button type="success" v-if="!item.status" class="button" @click="OderPc(item.namePc)">Đặt chỗ</el-button>
-          <el-button type="warning" v-else class="button" @click="cancellOderPc(item.namePc)">Hủy</el-button>
+          <el-button type="warning" v-if="item.status && checkDisable()" class="button" @click="cancellOderPc(item.namePc)">Hủy</el-button>
+          <el-button type="warning" v-if="item.status && !checkDisable()">Có người dùng</el-button>
         </div>
       </div>
     </el-card>
@@ -143,10 +144,12 @@ export default {
   mounted() {
     this.getListPc()
     this.getListDiscount()
+    this.checkDisable()
   },
   watch: {
     resData() {
       this.changeList()
+      this.checkDisable()
     },
     value() {
       this.changeList()
@@ -193,9 +196,18 @@ export default {
         })
       }
       this.listPc.forEach(e => {
-        if (e.status) e.statusConvert = 'Đang hoạt động'
+        if (this.checkDisable()) e.statusConvert = 'Máy đang có người khác sử dụng'
+        else if (e.status) e.statusConvert = 'Đang hoạt động'
         else e.statusConvert = 'Đang tắt'
       })
+    },
+    async checkDisable() {
+      const db = firebase.firestore()
+      const docpcName = await db.collection('Computer').doc(VueCookies.get('pcName'))
+      await docpcName.onSnapshot(res => {
+        if (res.data().nameUse.indexOf(VueCookies.get('username')) > 0) return true
+      })
+      return false
     },
     async OderPc(pcName) {
       try {
@@ -216,6 +228,8 @@ export default {
         if (!res.data().status) {
           await db.collection('User').doc(VueCookies.get('username')).update('pcName', pcName)
           await docpcName.update('status', true)
+          await docpcName.update('nameUse', VueCookies.get('username'))
+          await docpcName.update('disable', true)
           this.$notify({
             title: 'Success',
             message: 'Đặt chỗ thành công',
@@ -243,6 +257,8 @@ export default {
         VueCookies.set('pcName', '', '2h')
         await db.collection('User').doc(VueCookies.get('username')).update('pcName', '')
         await docpcName.update('status', false)
+        await docpcName.update('nameUse', '')
+        await docpcName.update('disable', false)
         this.$notify({
           title: 'Success',
           message: 'Hủy đặt máy thành công',

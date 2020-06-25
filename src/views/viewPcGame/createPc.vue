@@ -89,7 +89,9 @@ export default {
         Win: '',
         type: '',
         img: 'https://maytinhgiakhanh.vn/wp-content/uploads/2019/11/IMG_2318-500x333.jpg',
-        status: false
+        status: false,
+        nameUse: '',
+        disable: false
       },
       registerDiscount: {
         name: '',
