@@ -90,8 +90,7 @@ export default {
         type: '',
         img: 'https://maytinhgiakhanh.vn/wp-content/uploads/2019/11/IMG_2318-500x333.jpg',
         status: false,
-        nameUse: '',
-        disable: false
+        nameUse: ''
       },
       registerDiscount: {
         name: '',

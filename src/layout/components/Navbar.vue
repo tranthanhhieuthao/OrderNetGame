@@ -250,7 +250,7 @@ export default {
             position: 'bottom-right'
           })
           this.$store.dispatch('app/stockFoodUser', [])
-          VueCookies.set('orderFoodOfUser', '', '2h')
+          VueCookies.set('orderFoodOfUser', '', '4h')
         }).catch((error) => {
           console.log('Transaction failed: ', error)
         })
@@ -286,7 +286,7 @@ export default {
         return e.idFood !== id
       })
       this.$store.dispatch('app/stockFoodUser', temp)
-      VueCookies.set('orderFoodOfUser', JSON.stringify(temp), '2h')
+      VueCookies.set('orderFoodOfUser', JSON.stringify(temp), '4h')
     },
     convertTimeRemain() {
       var timeUse = setTimeout(() => {

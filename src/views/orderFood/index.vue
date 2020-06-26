@@ -115,7 +115,7 @@ export default {
         this.orderTemp = [...JSON.parse(VueCookies.get('orderFoodOfUser'))]
       }
       this.orderTemp.push(this.saveDataFoodCookie)
-      VueCookies.set('orderFoodOfUser', JSON.stringify(this.orderTemp), '2h')
+      VueCookies.set('orderFoodOfUser', JSON.stringify(this.orderTemp), '4h')
       this.$store.dispatch('app/stockFoodUser', this.orderTemp)
       this.quatityFood = 0
       this.$notify({

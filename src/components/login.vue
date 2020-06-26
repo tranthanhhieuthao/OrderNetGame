@@ -112,12 +112,12 @@ export default {
       try {
         const resLogin = await this.$store.dispatch('app/loginApplication', this.login)
         console.log(resLogin)
-        VueCookies.set('Token', resLogin.user.xa, '2h')
-        VueCookies.set('email', this.login.username, '2h')
+        VueCookies.set('Token', resLogin.user.xa, '4h')
+        VueCookies.set('email', this.login.username, '4h')
         const setDataUserCurrent = await firebase.firestore().collection('User').where('email', '==', VueCookies.get('email')).get()
         setDataUserCurrent.forEach(e => {
           this.$store.dispatch('app/dataUserCurrent', e.data())
-          VueCookies.set('username', e.id, '2h')
+          VueCookies.set('username', e.id, '4h')
           this.$store.dispatch('app/usernameReload', VueCookies.get('username'))
           this.$router.replace('/listPc')
         })

@@ -37,9 +37,9 @@
         <span>{{item.namePc}}: </span>
         <span>{{item.statusConvert}}</span>
         <div class="bottom clearfix">
-          <el-button type="success" v-if="!item.status" class="button" @click="OderPc(item.namePc)">Đặt chỗ</el-button>
-          <el-button type="warning" v-if="item.status && item.disable" class="button" @click="cancellOderPc(item.namePc)">Hủy</el-button>
-          <el-button type="warning" v-if="item.status && !item.disable" class="button">Có người đã dùng</el-button>
+          <el-button type="success" v-if="item.disable === ''" class="button" @click="OderPc(item.namePc)">Đặt chỗ</el-button>
+          <el-button type="warning" v-if="item.disable === 'NONE'" class="button" @click="cancellOderPc(item.namePc)">Hủy</el-button>
+          <el-button type="warning" v-if="item.disable === 'USED'" class="button">Có người đã dùng</el-button>
         </div>
       </div>
     </el-card>
@@ -179,10 +179,22 @@ export default {
       this.resDataDiscount.forEach(e => temp.push(e.data()))
       this.listDiscount = temp
     },
+    checkDisablePc() {
+      this.listPc.forEach(e => {
+        if (e.nameUse === '') e.disable = ''
+        else {
+          if (e.nameUse.includes(VueCookies.get('username'))) e.disable = 'NONE'
+          else e.disable = 'USED'
+        }
+      })
+    },
     changeList() {
       var temp = []
-      this.resData.forEach(e => temp.push(e.data()))
+      this.resData.forEach(e => {
+        temp.push(e.data())
+      })
       this.listPc = temp
+      this.checkDisablePc()
       if (this.value !== '' || this.select !== '') {
         this.listPc = this.listPc.filter(e => {
           if (this.value !== '' && this.select !== '') {
@@ -195,18 +207,10 @@ export default {
         })
       }
       this.listPc.forEach(e => {
-        if (!e.status) e.statusConvert = 'Đang tắt'
-        else if (e.status && e.disable) e.statusConvert = 'Đang hoạt động'
-        else if (e.status && !e.disable) e.statusConvert = 'Có người khác sử dụng'
+        if (e.disable === '') e.statusConvert = 'Đang tắt'
+        else if (e.disable === 'NONE') e.statusConvert = 'Đang hoạt động'
+        else if (e.disable === 'USED') e.statusConvert = 'Có người khác sử dụng'
       })
-    },
-    checkDisable() {
-      if (VueCookies.get('pcName') === null) return false
-      var namePcCurrent = this.listPc.find(e => {
-        return e.namePc.includes(VueCookies.get('pcName'))
-      })
-      if (namePcCurrent.nameUse.includes(VueCookies.get('username'))) return true
-      else return false
     },
     async OderPc(pcName) {
       try {
@@ -222,18 +226,12 @@ export default {
           })
           return 0
         }
-        VueCookies.set('pcName', pcName, '2h')
+        VueCookies.set('pcName', pcName, '4h')
         const res = await docpcName.get()
         if (!res.data().status) {
           await db.collection('User').doc(VueCookies.get('username')).update('pcName', pcName)
           await docpcName.update('status', true)
           await docpcName.update('nameUse', VueCookies.get('username'))
-          var namePcCurrent = this.listPc.find(e => {
-            return e.namePc.includes(VueCookies.get('pcName'))
-          })
-          if (namePcCurrent.nameUse.includes(VueCookies.get('username'))) {
-            await docpcName.update('disable', true)
-          } else await docpcName.update('disable', false)
           this.$notify({
             title: 'Success',
             message: 'Đặt chỗ thành công',
@@ -258,11 +256,10 @@ export default {
       try {
         const db = firebase.firestore()
         const docpcName = db.collection('Computer').doc(pcName)
-        VueCookies.set('pcName', '', '2h')
+        VueCookies.set('pcName', '', '4h')
         await db.collection('User').doc(VueCookies.get('username')).update('pcName', '')
         await docpcName.update('status', false)
         await docpcName.update('nameUse', '')
-        await docpcName.update('disable', false)
         this.$notify({
           title: 'Success',
           message: 'Hủy đặt máy thành công',

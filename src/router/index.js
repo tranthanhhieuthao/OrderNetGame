@@ -118,7 +118,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   var db = firebase.firestore()
   var count = 0
-  if (VueCookies.get('username') === null) VueCookies.set('username', 'Noname', '2h')
+  if (VueCookies.get('username') === null) VueCookies.set('username', 'Noname', '4h')
   if (store.state.app.usernameReload !== 'Noname' || VueCookies.get('username') !== 'Noname') {
     console.log(VueCookies.get('username'))
     db.collection('User').doc(VueCookies.get('username')).get().then(res => {
